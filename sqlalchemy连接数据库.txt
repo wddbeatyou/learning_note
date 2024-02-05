@@ -1,0 +1,45 @@
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import Column, Integer, String, Float, DateTime
+import pymysql
+from datetime import datetime
+pymysql.install_as_MySQLdb()
+
+
+# 创建表的流程
+host = '127.0.0.1'
+port = 3306
+database = 'wdd'
+username = 'root'
+password = '123456'
+
+# 数据库连接配置
+connect_sql = "mysql+mysqldb://{}:{}@{}:{}/{}".format(username, password, host, port, database)
+# 创建数据库引擎
+engine = create_engine(connect_sql)
+# 创建数据库表时需要调用的模型基类，必需参数
+base = declarative_base()
+
+# 创建模型类，设置数据库表的字段
+class PersonInfo(base):
+    __tablename__ = "personinfo"
+    id = Column(Integer, primary_key=True)
+    user = Column(String(20))
+    addr = Column(String(20))
+    weight = Column(Float)
+    createtime = Column(DateTime, default=datetime.now)
+
+    def __repr__(self):
+        return '<PersonInfo {}'.format(self.user)
+
+# 建表
+base.metadata.create_all(engine)
+
+
+# 查询表
+# 创建新的 Session 对象，Session 是 SQLAlchemy 中的主要工作单元，它代表与数据库的一次对话，并用于执行查询和更新。
+Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+db = Session()
+data = db.query(PersonInfo).filter(PersonInfo.id == 1).all()
+print(data)
