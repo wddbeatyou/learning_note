@@ -43,3 +43,17 @@ Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 db = Session()
 data = db.query(PersonInfo).filter(PersonInfo.id == 1).all()
 print(data)
+
+# 当调用下面方法时， 函数__repr__(self)需要注释
+# data = db.query(PersonInfo).filter(PersonInfo.id == 1).all()
+# user_name = data[0].user
+# print(user_name)
+
+# data = db.query(PersonInfo).all()
+# for onedata in data:
+#     print(onedata.user)
+#     print(onedata.addr)
+
+
+
+
