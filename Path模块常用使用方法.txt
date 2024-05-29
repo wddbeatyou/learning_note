@@ -1,0 +1,42 @@
+from pathlib import Path
+
+# 实例化：
+file_dir = Path("./video_to_image1")
+
+# 判断文件是否存在：
+file_dir.exists()
+file_dir.mkdir(parents=True, exist_ok=True)  # 确保目录存在，如果不存在，则创建
+
+# 创建文件夹：
+file_dir.mkdir()
+
+# 删除文件  
+file = Path("./video.mp4")
+file.unlink() 
+
+# 判断文件是否存在
+file_path = Path(f"./video/{userId}.mp4")
+file_path.is_file()
+
+# 遍历删除文件夹下所有文件
+video_dir = Path("./video")
+for item in video_dir.iterdir():
+	if item.is_file():
+		item.unlink()
+	elif item.is_dir():
+		shutil.rmtree(item)  # 使用shutil模块来递归删除子文件夹及其内容
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

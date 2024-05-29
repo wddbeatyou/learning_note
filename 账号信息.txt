@@ -1,7 +1,7 @@
 中电：
 账号：P6060751
 邮箱：dongdong.wang15@gientech.com
-密码：WDd@19930817
+密码：Wdd@19930817
 
 中控Gitlib代码库
 账号：1695100164@qq.com
@@ -42,9 +42,9 @@ github
 账号：wangdongdong/15671236817
 密码：wdd930817
 
-研发中心大数据平台
-账户：admin
-密码：123456supconit
+新研发中心大数据平台
+账号：mll，wdd
+密码：Supconit123
 
 jenkins：
 账号：zxh
