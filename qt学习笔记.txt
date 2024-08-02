@@ -1,0 +1,158 @@
+一.怎么实现开发的qt程序，在开发板上开机自启，并在显示屏上显示自己的qt开发窗口
+	1.创建编译可运行的helloworld的qt程序，得到可在开发板上运行的bin文件；
+	2.将可运行的bin文件拷贝到开发板上：/usr/bin；
+	3.修改开发板根目录下的文件：/etc/init.d/S99matrix-browser
+	修改内容如下：
+	修改前：
+		/usr/bin/matrix-browser -no-sandbox --disable-gpu 127.0.0.1 >> /dev/null &
+	修改后：
+		#/usr/bin/matrix-browser -no-sandbox --disable-gpu 127.0.0.1 >> /dev/null &
+		/usr/bin/HelloWorld &
+	4.修改完后，输入：sync；实现同步保存。
+	5.重启开发板，输入命令：reboot；
+
+二.如何实现输入qtcreator开启QT Creator
+	第一步：vim ~/.bashrc
+	第二步：export PATH=$PATH:/opt/Qt5.12.9/Tools/QtCreator/bin/
+	第三步：source ~/.bashrc
+	第四步：qtcreator
+
+三.开发板烧写流程
+	第一步：双击运行：RKDevTool.exe；
+	第二步：用 Type-C 线连接开发板和主机，按住开发板的 recovery 键不要松开，然后按一下 reset 键系统复位，大约两秒后松开 recovery 键。
+	第三步：工具“RKDevTool.exe”显示“发现一个ADB设备”后，点击“升级固件”，在该窗口下，点击“固件”，选择本地编译好的镜像文件“update.img”，再点击“擦除Flash”，最后点击“升级”；
+	第四步：升级结束后，双击运行：CP210xVCPInstaller_x64.exe；
+	第五步：打开一个终端软件，进行串口登录；
+	第六步：登录进去后，修改目录/etc/netplan/下的一个网络配置文件*yaml；
+	第七步：yaml文件修改完成后，输入命令：sudo netplan apply；最后进行ssh网络登录；
+	后续操作是实现qt交叉编译的配置：
+	第八步：下载厂家的qt编译环境：host-qt5.12.2.tar.bz2，存放到虚拟机ubantu系统的目录下并解压（目录名不能更改）：
+			/home/forlinx/work/OK3568-linux-source/buildroot/output/OK3568/host，这个目录新建；
+	第九步：执行一下命令：
+		1.输入命令：sudo vi /etc/apt/sources.list，在文件中添加：deb http://th.archive.ubuntu.com/ubuntu jammy main
+		2.输入命令：sudo apt update
+		3.输入命令：sudo apt install libc6，遇到选择，选择“yes”；
+		第十步：打开qtcreator，进行配置：
+		在“编译器”的Manual下点击添加：
+		GCC: /home/forlinx/work/OK3568-linux-source/buildroot/output/OK3568/host/bin/aarch64-linux-gcc
+		G++: /home/forlinx/work/OK3568-linux-source/buildroot/output/OK3568/host/bin/aarch64-linux-g++
+		在“Qt Versions”下添加：
+		版本名称：ARM QT 5.12.2
+		qmake路径：/home/forlinx/work/OK3568-linux-source/buildroot/output/OK3568/host/bin/qmake
+		在“Kits”下添加:
+		名称：
+		compiler："C"选择编译器中的“GCC”，"C++"选择编译器中的“G++”；
+		Qt version：选择“Qt Versions”中的版本；
+
+四、开发板开机自启动qt程序
+	第一步：进入目录：/etc/systemd/system；
+	第二步：进入目录：/lib/systemd/system/；执行：ls /lib/systemd/system；可以看到有很多启动脚本，其中就有我们需要的 rc-local.service；
+	第三步：systemd 默认读取 /etc/systemd/system 下的配置文件，该目录下的文件会链接/lib/systemd/system/下的文件；
+	第四步：查看目录/lib/systemd/system/下的文件rc-local.service；
+		[Unit]
+		Description=/etc/rc.local Compatibility
+		ConditionFileIsExecutable=/etc/rc.local
+		After=network.target
+		[Service]
+		Type=forking
+		ExecStart=/etc/rc.local start
+		TimeoutSec=0
+		RemainAfterExit=yes
+		==============================================================
+		解释：
+			[Unit] 段: 启动顺序与依赖关系 
+			[Service] 段: 启动行为,如何启动，启动类型 
+			[Install] 段: 定义如何安装这个配置文件，即怎样做到开机启动
+	第五步：修改rc-local.service文件，做到开机启动：
+		[Unit]
+		Description=/etc/rc.local Compatibility
+		Documentation=man:systemd-rc-local-generator(8)
+		ConditionFileIsExecutable=/etc/rc.local
+		After=network.target
+		[Service]
+		Type=forking
+		ExecStart=/etc/rc.local start
+		TimeoutSec=0
+		RemainAfterExit=yes
+		GuessMainPID=no
+		[Install]
+		WantedBy=multi-user.target
+		Alias=rc-local.service
+	第六步：ubuntu-20.04 server 版默认是没有 /etc/rc.local 这个文件的，需要自己创建：
+		1.输入命令：sudo touch /etc/rc.local
+		2.向文件rc.local中添加需要执行的命令：
+			#!/bin/bash
+			bash /home/forlinx/wdd/job/startapp.sh &
+			exit 0
+		2.修改文件权限：sudo chmod +x /etc/rc.local
+	第七步：前面我们说 systemd 默认读取 /etc/systemd/system 下的配置文件, 所以还需要在 /etc/systemd/system 目录下创建软链接：
+		ln -s /lib/systemd/system/rc-local.service /etc/systemd/system/
+	第八步：编写shell启动脚本startapp.sh，内容如下：
+		#!/bin/bash  
+		export QT_QPA_PLATFORM_PLUGIN_PATH=/usr/lib/aarch64-linux-gnu/qt5/plugins/platforms
+		#export DISPLAY=:0
+		#export QT_QPA_PLATFORM=eglfs
+		export QT_QPA_PLATFORM=linuxfb
+		export XDG_RUNTIME_DIR=/tmp/$(whoami)-runtime
+		mkdir -p $XDG_RUNTIME_DIR
+		chmod 0700 $XDG_RUNTIME_DIR
+		#sleep 5
+		cd /home/forlinx/wdd/job/erweima_01/build-QR_Code-ARM_QT_5_12_2-Debug
+		./QR_Code
+	第九步：设置启动配置：
+						sudo systemctl start rc-local.service
+						sudo systemctl status rc-local.service
+						sudo systemctl enable rc-local.service
+						sudo reboot
+						sudo lsof -i -n -P
+						sudo systemctl daemon-reload
+						sudo systemctl start qrcode.service
+						sudo systemctl status qrcode.service
+						sudo systemctl enable qrcode.service 
+						sudo journalctl -u qrcode.service
+	第十步：每次修改完qt文件后，只需将qt可执行文件和所属依赖复制到开发板上，并修改启动脚本：startapp.sh，
+			  修改地方主要在“cd /home/forlinx/wdd/job/erweima_01/build-QR_Code-ARM_QT_5_12_2-Debug“和 ”./QR_Code”；
+
+五、qt开发常见问题
+1.其他电脑访问不了开发板，但是与交换机相连的电脑可以访问？
+查看目录/etc/rc.local文件，在里面加上一下内容：
+												ifconfig can0 down
+												ip link set can0 type can bitrate 50000
+												ifconfig can0 up
+
+												ifconfig eth0 down
+												ifconfig eth0 hw  ether b2:ed:be:7a:8f:d8
+												ifconfig eth0 up
+因为开发板mac地址随意变换，只能写死，才能访问固定ip。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

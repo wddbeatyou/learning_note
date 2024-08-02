@@ -1,7 +1,7 @@
 中电：
 账号：P6060751
 邮箱：dongdong.wang15@gientech.com
-密码：Wdd@19930817
+密码：Zxh@19941112
 
 中控Gitlib代码库
 账号：1695100164@qq.com
@@ -74,12 +74,18 @@ tomcat：
 账号：dongdong.wang15@gientech.com
 密码：Zxh@19941112
 
+QT:
+账号：1695100164@qq.com
+密码：wdd@930817
 
 
+飞凌开发板论坛
+账号：wdd123
+密码：wdd930817
 
-
-
-
+Vware：
+账号：1695100164@qq.com
+密码：Wdd@930817
 
 
 
