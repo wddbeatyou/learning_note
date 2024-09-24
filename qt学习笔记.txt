@@ -113,7 +113,29 @@
 	第十步：每次修改完qt文件后，只需将qt可执行文件和所属依赖复制到开发板上，并修改启动脚本：startapp.sh，
 			  修改地方主要在“cd /home/forlinx/wdd/job/erweima_01/build-QR_Code-ARM_QT_5_12_2-Debug“和 ”./QR_Code”；
 
-五、qt开发常见问题
+五、qt在ubantu系统上设置为桌面快捷方式
+
+第一步: 切换至目录/usr/share/applications/，执行命令：cd /usr/share/applications/
+第二步: 创建文件，执行命令：sudo vim qtcreator.desktop
+第二步: 在文件qtcreator.desktop中添加一下内容：
+												[Desktop Entry]
+												Encoding=UTF-8
+												Type=Application
+												Name=QTCreator
+												Comment=QtCreator
+												Icon=/opt/Qt5.12.8/Examples/Qt-5.12.8/location/mapviewer/resources/icon.png
+												Exec=/opt/Qt5.12.8/Tools/QtCreator/bin/qtcreator
+												Terminal=false
+												StartupNotify=true
+												Categories=Application;Development;
+
+注解：
+	Icon：图标所在位置；
+	Exec：qt程序启动位置；
+第四步：将qtcreator.desktop复制到桌面，选中文件点击鼠标右键，然后点击一下“允许启动”；
+		如果还不行，则在属性设置中在“权限”里的“其他”中的“访问”选择“无”，“执行”中勾选“允许文件作为程序执行”；
+
+六、qt开发常见问题
 1.其他电脑访问不了开发板，但是与交换机相连的电脑可以访问？
 查看目录/etc/rc.local文件，在里面加上一下内容：
 												ifconfig can0 down
