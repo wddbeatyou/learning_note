@@ -1,0 +1,163 @@
+1.python插件安装：
+方式一：
+	pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+	pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+方式二：
+	pip install paddlepaddle -i https://mirrors.aliyun.com/pypi/simple/
+方式三：
+	python -m pip install --upgrade pip
+	pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+	pip config set global.extra-index-url "<url1> <url2>..."
+
+2.GPU的cuda查看
+方式一：GPU使用情况查询，用于监控和管理NVIDIA GPU（图形处理器）的状态和性能
+	nvidia-smi
+	
+方式二：查看cuda版本
+	nvcc --version
+
+
+3.进程查询：
+	ps -ef|grep python
+# 用来搜索正在运行的Python进程。
+ps: 显示进程的命令。
+-e: 选择所有进程。
+-f: 显示完整格式的信息。
+
+
+4.杀死进程：
+	kill -9 进程id
+	# 例子 ：
+		kill -9 1513248
+
+
+5.官网上查看python中某个插件版本的可用版本
+第一步：访问Python的官方网站：https://pypi.org/
+第一步：在搜索框中输入插件名称，如numpy，tensorflow等，然后搜索，通常会列出可用的所有版本。
+
+
+6.查看已安装python插件的某个版本
+	python -c "import 插件名; print(插件名.__version__)"
+	pip show 插件名
+	例子：
+		python -c "import numpy; print(numpy.__version__)"
+		pip show numpy
+
+
+7.后台启动某个服务
+	nohup python 脚本名 &
+	例子：
+		nohup python my_script.py &
+		nohup python my_script.py > my_output.log 2>&1 &
+	注释：
+		nohup：这个命令使得即使你关闭了终端，命令也会继续运行。
+		python3 my_script.py：这是你想要运行的Python命令。
+		&：这个符号将命令放到后台执行。
+
+
+8.在ubantu系统上操作一些命令
+1).本地连接ubantu远程系统
+
+第一步：输入命令：
+					ssh 用户名@ip
+			实例：
+					ssh wdd@172.20.31.190
+
+第二步：输入密码：
+					密码
+			实例：
+					123456
+2).添加用户
+第一步：输入命令：
+					adduser wdd(或 sudo adduser wdd)
+第二步：输入密码：
+			实例：
+					123456
+
+3).怎么确定系统是ubantu，还是centos
+输入命令：
+			lsb_release -a
+
+
+9.ubantu系统上安装python
+第一步：进入终端后输入以下：
+	sudo apt update
+第二步：安装PPA需要的软件源:
+	sudo apt install software-properties-common -y
+第三步：添加名为deadsnake的PPA源:
+	sudo add-apt-repository ppa:deadsnakes/ppa
+第四步：安装python3.10:
+	sudo apt install python3.10
+第五步：安装好后，通过以下命令验证:
+	python3.10 --version
+第六步：如果你想要python命令指向Python 3.10，你可以在你的shell配置文件中（如.bashrc或.bash_profile）添加：
+	alias python='/usr/bin/python3.10'
+
+注意：
+	.bashrc 文件通常位于用户的家目录中，即 /home/用户名/。例如，如果你的用户名是 john，那么 .bashrc 文件将位于 /home/john/.bashrc。
+
+
+10.如果在ubantu系统上，新创建的用户不具备使用sudo的权限，该怎么操作？
+第一步：切换至root或可以使用 sudo 的用户账户；
+第二步：输入命令：
+					sudo visudo
+第三步：编辑 sudoers 文件，在这个文件中添加一行来允许 wdd 用户使用 sudo。
+		wdd ALL=(ALL:ALL) ALL
+第四步：保存退出。
+
+
+11.查看ubantu系统的摄像头设备文件
+第一步：查看设备文件：
+						ls /dev/video*
+第二步：需要确保用户具备使用设备文件的权限，将您的用户添加到video组（请替换$USER为您的用户名）：
+		sudo usermod -aG video $USER
+第三步：重新登录。
+
+
+12.列出ubantu系统可用的视频设备
+	v4l2-ctl --list-devices
+
+
+13.列出ubantu系统所有 USB 设备及其制造商和产品 ID
+	lsusb
+
+
+14.当ubantu已经安装anaconda，但是输入“conda info -e”，显示command conda not found
+方法：先切换用户“su 用户名”，再输入“conda info -e”
+
+
+15.连接远程ubantu服务器，用户和密码正确，terminal怎么连接不上
+方法一：执行sudo apt-get install openssh-server来安装SSH服务，安装完成后该服务通常会自动启用。
+方法二：使用sudo ufw status查看防火墙状态，并使用sudo ufw allow ssh或sudo ufw allow 22来允许SSH连接。
+
+16.查看文件大小
+du -sh 文件路径
+举例： 
+	du -sh face_recognition_video
+
+17.ubantu系统中将输出信息保存在日志文件中
+make -j4 2>&1 | tee build.log
+make install 2>&1 | tee install.log
+
+18.修改ubantu系统时间
+sudo date -s "2024-07-11 13:29:30"
+
+19.查看运行服务的端口
+sudo lsof -i -n -P |grep "Server"
+
+20.在指定路径上创建虚拟环境
+conda create --prefix D:\envs\myenv python=3.8
+
+21. win10系统查看进程和杀死进程
+查看：
+netstat -ano | findstr :端口
+例子：
+netstat -ano | findstr :8003
+
+杀死：
+taskkill /PID 进程id /F
+例子：
+taskkill /PID 600 /F
+
+
+

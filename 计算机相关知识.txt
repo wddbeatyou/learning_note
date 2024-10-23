@@ -1,0 +1,34 @@
+1.IP地址，子网掩码、默认网关，DNS的设置和工作原理
+IP地址：
+
+
+子网掩码：
+
+
+默认网关：
+含义：
+	就是一个网络连接到另一个网络的“关口”。网关实质上是一个网络通向其它网络的IP地址。这个IP地址，是具有路由功能的IP地址，
+	默认网关也是一个网关，也是具有路由功能的设备的IP地址。注意：在填写默认网关时，主机的IP地址必须和默认网关的IP地址处于同一段。
+解释：
+	如果网络A中的主机发现数据包的目的主机不在本地网络中，就把数据包转发给它自己的网关，再由网关转发给网络B的网关，
+	网络B的网关再转发给网络B的某个主机。网络B向网络A转发数据包的过程也是如此。
+	所以说，只有设置好网关的IP地址，TCP/IP协议才能实现不同网络之间的相互通信。
+DNS：
+含义：
+	DNS地址是一个域名服务器地址，它负责把用户的网站地址解析成IP地址。如果这个服务器出现问题，那么你就可能上不了网了。
+解释：
+	DNS 全名叫 Domain Name Server，中文俗称“域名服务器”，在说明 DNS Server 之前，可能要先说明什么叫 Domain Name(域名)。
+	正如上面所讲，在网上辨别一台电脑的方法是利用 IP地址，但是 IP用数字表示，没有特殊的意义，很不好记，因此，
+	我们一般会为网上的电脑取一个有某种含义又容易记忆的名字，这个名字我们就叫它“DomainName"。
+
+
+2. conda安装流程
+wget http://repo.continuum.io/miniconda/Miniconda3-py38_4.9.2-Linux-aarch64.sh
+sudo bash Miniconda3-py38_4.9.2-Linux-aarch64.sh
+sudo vim ~/.bashrc
+export PATH="/home/orin/anaconda/miniconda3/bin:$PATH"
+source ~/.bashrc
+source activate
+conda deactivate
+conda create -n yolo python=3.8
+conda activate yolo
