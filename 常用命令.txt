@@ -3,7 +3,7 @@
 	pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 	pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 方式二：
-	pip install paddlepaddle -i https://mirrors.aliyun.com/pypi/simple/
+	pip install onnxruntime==1.16.3 -i https://mirrors.aliyun.com/pypi/simple/
 方式三：
 	python -m pip install --upgrade pip
 	pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
@@ -159,5 +159,7 @@ taskkill /PID 进程id /F
 例子：
 taskkill /PID 600 /F
 
-
-
+3.内存使用情况
+df -h       # 检查磁盘空间
+free -m     # 检查内存使用情况
+top/htop         # 查看 CPU 使用情况

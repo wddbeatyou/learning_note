@@ -23,8 +23,8 @@ DNS：
 
 
 2. conda安装流程
-wget http://repo.continuum.io/miniconda/Miniconda3-py38_4.9.2-Linux-aarch64.sh
-sudo bash Miniconda3-py38_4.9.2-Linux-aarch64.sh
+wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-aarch64.sh
+sudo bash Miniconda3-latest-Linux-aarch64.sh
 sudo vim ~/.bashrc
 export PATH="/home/orin/anaconda/miniconda3/bin:$PATH"
 source ~/.bashrc
@@ -32,3 +32,116 @@ source activate
 conda deactivate
 conda create -n yolo python=3.8
 conda activate yolo
+
+
+3. 什么是eMMC，SSD和HDD
+eMMC，全称embedded MultiMediaCard，即嵌入式多媒体卡，作用类似硬盘。
+eMMC：主要应用于移动设备、汽车电子、工业控制等领域。特别是在智能手机、平板电脑和其他便携式设备中，eMMC已成为主流的存储解决方案。
+固态硬盘（SSD）：大小类似内存条；
+机械硬盘（HDD）：体积较大的长方体的硬件。
+
+4.docker常用命令
+sed的用法
+RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list && apt-get update && apt-get install -y <package>
+解释：
+-i：这个选项告诉 sed 直接修改文件内容，而不是将结果输出到标准输出（通常是屏幕）。这意味着 /etc/apt/sources.list 文件将被直接修改。
+'s/archive.ubuntu.com/mirrors.aliyun.com/g'：这是 sed 的脚本部分，指定了要执行的编辑操作。s 代表替换（substitute）操作，/ 是分隔符，archive.ubuntu.com 是要被替换的文本，mirrors.aliyun.com 是替换后的文本，g 表示全局替换（即替换行中所有匹配的实例，而不仅仅是第一个）。
+/etc/apt/sources.list：这是要编辑的文件名。
+
+--no-install-recommends的用法
+RUN apt-get update && apt-get install -y --no-install-recommends <package>
+--no-install-recommends 选项指示 apt-get 不要安装推荐的软件包。推荐的软件包是那些被认为与指定软件包一起使用很好的软件包，但它们不是必需的。这个选项可以减小安装后的镜像大小，因为它避免了安装可能不需要的额外软件包。
+
+增加日志打印
+RUN echo "Installing dependencies..." && apt-get update && apt-get install -y git
+
+5. 镜像源
+{
+  "registry-mirrors": ["https://docker.registry.cyou",
+	"https://docker-cf.registry.cyou",
+	"https://dockercf.jsdelivr.fyi",
+	"https://docker.jsdelivr.fyi",
+	"https://dockertest.jsdelivr.fyi",
+	"https://mirror.aliyuncs.com",
+	"https://dockerproxy.com",
+	"https://mirror.baidubce.com",
+	"https://docker.m.daocloud.io",
+	"https://docker.nju.edu.cn",
+	"https://docker.mirrors.sjtug.sjtu.edu.cn",
+	"https://docker.mirrors.ustc.edu.cn",
+	"https://mirror.iscas.ac.cn",
+	"https://docker.rainbond.cc"]
+}
+
+6.docker镜像运行和打包全过程
+1.配置镜像源
+	sudo vim /etc/docker/daemon.json
+	添加：
+	{
+	  "registry-mirrors": ["https://f3c2bqrx.mirror.aliyuncs.com","https://jockerhub.com"]
+	}
+	#重启docker
+	sudo systemctl daemon-reload
+	sudo systemctl restart docker
+2.检查配置情况：
+	docker pull mysql
+3.编写Dockerfile
+4.生成镜像
+	docker build -t 镜像名 .
+5.运行镜像和停止容器
+方式一：编写yml文件，使用docker compose方式管理
+前台运行：docker compose up
+后台运行：docker compose up -d --force-recreate
+停止容器：docker compose down
+
+方式二：生成容器直接运行
+前台运行：docker run -it --name=容器名 镜像名:标签 /bin/bash
+后台运行：docker run -di --name=容器名 镜像名:标签 /bin/bash
+停止容器：docker stop 容器id
+6.打包镜像
+	docker save -o xxxx.tar xxx:latest
+7.加载镜像
+	docker load -i xxx.tar
+8.查看日志
+docker logs 容器id
+
+可选：
+9.进入容器内部
+	docker exec -it 容器id /bin/bash
+10.删除镜像
+	docker rmi 镜像ID
+	docker rmi 镜像ID --force
+11.拉取镜像
+	docker pull 镜像名称
+12.推送镜像
+	本地推送：
+	docker push [镜像名]:[标签]
+	远程推送：
+	docker login --username=wdd930817 registry.cn-hangzhou.aliyuncs.com
+	docker tag 镜像ID registry.cn-hangzhou.aliyuncs.com/wdd_project/wdd_docker:版本号
+	docker push registry.cn-hangzhou.aliyuncs.com/wdd_project/wdd_docker:[镜像版本号]
+13.查看镜像
+	docker images
+14.查看容器
+查看运行容器：	
+	docker ps
+查看所有容器：	
+	docker ps -a
+15.容器生成镜像
+	docker run --name 容器名 镜像名 /bin/bash
+16.镜像生成容器
+	docker run -it --name=容器名 镜像名:标签 /bin/bash
+17.启动容器
+	docker start 容器名称（或者容器ID）
+
+
+
+
+
+
+
+
+
+
+
+
