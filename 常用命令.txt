@@ -3,7 +3,7 @@
 	pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 	pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 方式二：
-	pip install onnxruntime==1.16.3 -i https://mirrors.aliyun.com/pypi/simple/
+	pip install paho-mqtt==2.1.0 -i https://mirrors.aliyun.com/pypi/simple/
 方式三：
 	python -m pip install --upgrade pip
 	pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple

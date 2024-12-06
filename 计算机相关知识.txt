@@ -1,4 +1,4 @@
-1.IP地址，子网掩码、默认网关，DNS的设置和工作原理
+一.IP地址，子网掩码、默认网关，DNS的设置和工作原理
 IP地址：
 
 
@@ -22,7 +22,7 @@ DNS：
 	我们一般会为网上的电脑取一个有某种含义又容易记忆的名字，这个名字我们就叫它“DomainName"。
 
 
-2. conda安装流程
+二. conda安装流程
 wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-aarch64.sh
 sudo bash Miniconda3-latest-Linux-aarch64.sh
 sudo vim ~/.bashrc
@@ -32,15 +32,16 @@ source activate
 conda deactivate
 conda create -n yolo python=3.8
 conda activate yolo
+conda config --add envs_dirs /home/orin/anaconda/miniconda3/envs
 
 
-3. 什么是eMMC，SSD和HDD
+三. 什么是eMMC，SSD和HDD
 eMMC，全称embedded MultiMediaCard，即嵌入式多媒体卡，作用类似硬盘。
 eMMC：主要应用于移动设备、汽车电子、工业控制等领域。特别是在智能手机、平板电脑和其他便携式设备中，eMMC已成为主流的存储解决方案。
 固态硬盘（SSD）：大小类似内存条；
 机械硬盘（HDD）：体积较大的长方体的硬件。
 
-4.docker常用命令
+四.docker常用命令
 sed的用法
 RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list && apt-get update && apt-get install -y <package>
 解释：
@@ -55,7 +56,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends <package>
 增加日志打印
 RUN echo "Installing dependencies..." && apt-get update && apt-get install -y git
 
-5. 镜像源
+五. 镜像源
 {
   "registry-mirrors": ["https://docker.registry.cyou",
 	"https://docker-cf.registry.cyou",
@@ -73,7 +74,7 @@ RUN echo "Installing dependencies..." && apt-get update && apt-get install -y gi
 	"https://docker.rainbond.cc"]
 }
 
-6.docker镜像运行和打包全过程
+六.docker镜像运行和打包全过程
 1.配置镜像源
 	sudo vim /etc/docker/daemon.json
 	添加：
@@ -103,7 +104,7 @@ RUN echo "Installing dependencies..." && apt-get update && apt-get install -y gi
 7.加载镜像
 	docker load -i xxx.tar
 8.查看日志
-docker logs 容器id
+	docker logs 容器id
 
 可选：
 9.进入容器内部
@@ -129,19 +130,12 @@ docker logs 容器id
 	docker ps -a
 15.容器生成镜像
 	docker run --name 容器名 镜像名 /bin/bash
+	docker commit 容器名 镜像名
 16.镜像生成容器
 	docker run -it --name=容器名 镜像名:标签 /bin/bash
 17.启动容器
 	docker start 容器名称（或者容器ID）
-
-
-
-
-
-
-
-
-
-
+18.将容器内的文件复制到本机上
+	docker cp <container_id>:<container_path> <host_path>
 
 

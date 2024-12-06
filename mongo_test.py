@@ -1,10 +1,157 @@
+# -*- coding: utf-8 -*-
+# @Author: wangdongdong
+# @Time: 2024/12/4 16:42
 from pymongo import MongoClient
-import datetime
 
 
 # 注意： 在 MongoDB 中，集合只有在内容插入后才会创建! 就是说，创建集合(数据表)后要再插入一个文档(记录)，集合才会真正创建。
 # 注意：数据库创建和集合创建后，需要在集合(数据表)中插入一个文档(记录)，数据库才会真正创建。
 
+# ===========================数据库连接=======================================
+# 连接mongdb数据库
+# client = MongoClient('localhost', 27017)
+
+client = MongoClient('mongodb://localhost:27017/')
+# db = client.mydatabase
+
+# client = MongoClient('mongodb://wdd:930817@localhost:27017/wdd')
+db = client['wdd']
+# ===========================数据表加载=========================================
+# 选择表
+collection = db["test"]
+# ===========================数据表删除=========================================
+# 删除表
+collection.drop()
+# ===========================数据表插入一条数据===================================
+collection = db["test"]
+document = {"name": "John", "age": 25, "city": "New York"}
+collection.insert_one(document)
+# ===========================数据表插入多条数据===================================
+documents = [
+    {"name": "Anna", "age": 28, "city": "London"},
+    {"name": "Mike", "age": 32, "city": "Chicago"}
+]
+collection.insert_many(documents)
+# ===========================数据表查询一条数据====================================
+result = collection.find_one({"name": "John"})
+# ===========================数据表查询多条数据====================================
+# results = collection.find({"age": {"$gt": 25}})
+# for result in results:
+#     print(result)
+# ===========================数据表更新一条数据====================================
+collection.update_one({"name": "John"}, {"$set": {"age": 26}})
+# results = collection.find({"age": {"$gt": 25}})
+# for result in results:
+#     print(result)
+# ===========================数据表更新多条数据====================================
+collection.update_many({"age": {"$gt": 26}}, {"$set": {"city": "San Francisco"}})
+# results = collection.find({"age": {"$gt": 25}})
+# for result in results:
+#     print(result)
+# ===========================数据表条件查询数据====================================
+# 1 条件查询
+"""
+常用查询操作符：
+    $eq：等于
+    $ne：不等于
+    $gt：大于
+    $gte：大于等于
+    $lt：小于
+    $lte：小于等于
+    $in：在指定数组内
+    $nin：不在指定数组内
+"""
+# results = collection.find({"age": {"$gte": 25}})
+# for result in results:
+#     print(result)
+# 2 逻辑操作符
+"""
+常用逻辑操作符：
+    $and：与
+    $or：或
+    $not：非
+    $nor：非或
+"""
+# results = collection.find({"$or": [{"age": {"$lt": 25}}, {"city": "San Francisco"}]})
+# print(type(results))
+# for result in results:
+#     print(result)
+
+# 3 正则表达式
+# results = collection.find({"name": {"$regex": "^J"}})
+# for result in results:
+#     print(result)
+
+# 4 字段选择
+# results = collection.find({}, {"_id": 0, "name": 1, "age": 1})
+# for result in results:
+#     print(result)
+
+# 5 排序
+# results = collection.find().sort("age", 1)   # 正序：从小到大
+# results = collection.find().sort("age", -1)   # 倒序：从大到小
+# for result in results:
+#     print(result)
+
+# 6 限制和跳过
+results = collection.find().skip(2).limit(10)
+for result in results:
+    print(result)
+
+# ===========================数据表索引=========================================
+# 1 创建索引
+collection.create_index([("name", 1)])
+
+# 2 列出索引
+for index in collection.list_indexes():
+    print(index)
+
+# 3 删除索引
+collection.drop_index("name_1")
+
+# 4 删除所有索引
+collection.drop_indexes()
+
+# ===========================数据表聚合=========================================
+"""
+常用聚合操作符：
+    $match：过滤数据
+    $group：分组并进行计算
+    $sort：排序
+    $limit：限制结果数量
+    $skip：跳过指定数量的结果
+    $project：改变输出文档的结构
+    $unwind：拆分数组字段中的元素
+"""
+pipeline = [
+    {"$match": {"age": {"$gte": 25}}},
+    {"$group": {"_id": "$city", "average_age": {"$avg": "$age"}}}
+]
+results = collection.aggregate(pipeline)
+for result in results:
+    print(result)
+
+# ===========================数据表其他操作=========================================
+# 1 统计集合文档数量
+count = collection.count_documents({"age": {"$gte": 25}})
+print(count)
+
+# 2 执行命令
+result = db.command("serverStatus")
+print(result)
+
+# ===========================数据表连接池和超时=========================================
+# 1 设置连接池
+# client = MongoClient('mongodb://localhost:27017/', maxPoolSize=50)   # 可以设置连接池参数，例如最大连接数
+
+# 2 设置超时
+# client = MongoClient('mongodb://localhost:27017/', serverSelectionTimeoutMS=5000, socketTimeoutMS=2000)
+
+
+# ===========================案例=========================================
+from pymongo import MongoClient
+import datetime
+# =======================================================================================================================
 # 1.配置数据库连接信息
 # 方式一：
 # client1 = MongoClient("127.0.0.1", 27017)  # 如果是本地连接host,port参数可以省略
