@@ -8,8 +8,8 @@
 密码：wdd930817
 
 中控上网：
-账号：wb248
-密码：Abc@1234
+账号：gdwb
+密码：Gd@123456
 
 mysql：
 账号：localhost

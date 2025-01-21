@@ -3,7 +3,7 @@
 	pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 	pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 方式二：
-	pip install paho-mqtt==2.1.0 -i https://mirrors.aliyun.com/pypi/simple/
+	pip install cnocr==2.3.0.3 -i https://mirrors.aliyun.com/pypi/simple/
 方式三：
 	python -m pip install --upgrade pip
 	pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
@@ -51,7 +51,7 @@ ps: 显示进程的命令。
 		nohup python my_script.py > my_output.log 2>&1 &
 	注释：
 		nohup：这个命令使得即使你关闭了终端，命令也会继续运行。
-		python3 my_script.py：这是你想要运行的Python命令。
+		python4 my_script.py：这是你想要运行的Python命令。
 		&：这个符号将命令放到后台执行。
 
 
@@ -89,7 +89,7 @@ ps: 显示进程的命令。
 第四步：安装python3.10:
 	sudo apt install python3.10
 第五步：安装好后，通过以下命令验证:
-	python3.10 --version
+	python3.12 --version
 第六步：如果你想要python命令指向Python 3.10，你可以在你的shell配置文件中（如.bashrc或.bash_profile）添加：
 	alias python='/usr/bin/python3.10'
 
@@ -140,7 +140,7 @@ make -j4 2>&1 | tee build.log
 make install 2>&1 | tee install.log
 
 18.修改ubantu系统时间
-sudo date -s "2024-07-11 13:29:30"
+sudo date -s "2024-07-12 13:29:30"
 
 19.查看运行服务的端口
 sudo lsof -i -n -P |grep "Server"

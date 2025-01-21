@@ -81,6 +81,22 @@ RUN echo "Installing dependencies..." && apt-get update && apt-get install -y gi
 	{
 	  "registry-mirrors": ["https://f3c2bqrx.mirror.aliyuncs.com","https://jockerhub.com"]
 	}
+	{
+	  "registry-mirrors": ["https://docker.registry.cyou",
+							"https://docker-cf.registry.cyou",
+							"https://dockercf.jsdelivr.fyi",
+							"https://docker.jsdelivr.fyi",
+							"https://dockertest.jsdelivr.fyi",
+							"https://mirror.aliyuncs.com",
+							"https://dockerproxy.com",
+							"https://mirror.baidubce.com",
+							"https://docker.m.daocloud.io",
+							"https://docker.nju.edu.cn",
+							"https://docker.mirrors.sjtug.sjtu.edu.cn",
+							"https://docker.mirrors.ustc.edu.cn",
+							"https://mirror.iscas.ac.cn",
+							"https://docker.rainbond.cc"]
+}
 	#重启docker
 	sudo systemctl daemon-reload
 	sudo systemctl restart docker
@@ -138,4 +154,79 @@ RUN echo "Installing dependencies..." && apt-get update && apt-get install -y gi
 18.将容器内的文件复制到本机上
 	docker cp <container_id>:<container_path> <host_path>
 
+七.Jetson Orin Nano安装torch调用gpu
+第一步：进入官网：https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
+第二步：查看jetpack版本：sudo apt-cache show nvidia-jetpack，如：Version: 5.1.2-b104
+第三步：下载jetpack版本对应的torch版本： torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl
+第四步：安装torch：pip install torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl
+第五步：安装相关依赖：
+						sudo apt --fix-broken install
+						sudo apt update
+						sudo apt install libopenblas-dev
+第六步：查看结果：
+						import torch
+						print(torch.__version__)
+						print(torch.cuda.is_available())
 
+八.FFmpeg+Mediamtx+VLC 简单实现视频流的推流拉流效果
+FFmpeg
+定义：FFmpeg是一款强大的多媒体处理工具，它负责将视频文件进行编码并推送到流媒体服务器上。
+FFmpeg主要执行以下任务：
+	读取视频文件：FFmpeg可以从本地文件系统或网络位置读取视频文件。
+	编码转换：根据需要将视频文件转换为流媒体服务器可以接受的格式和编码。
+	推流：将编码后的视频流推送到指定的流媒体服务器地址和端口。
+
+Mediamtx
+定义：Mediamtx在这里作为流媒体服务器，它负责接收FFmpeg推送的视频流，并将其提供给VLC或其他客户端进行拉流播放。
+流媒体服务器的主要功能包括：
+	接收推流：从FFmpeg等推流工具接收视频流。
+	流媒体处理：对流媒体数据进行处理，如转发、录制、广播等。
+	提供拉流服务：将处理后的视频流提供给VLC或其他支持RTSP、RTMP等协议的客户端进行播放。
+
+VLC
+定义：VLC（VideoLAN Client）是一款开源的多媒体播放器，它支持多种音频和视频格式以及流媒体协议。在这里，VLC作为拉流工具，负责从流媒体服务器接收视频流并在本地进行播放。
+VLC的主要功能包括：
+	拉流：从流媒体服务器接收RTSP、RTMP等协议的视频流。
+	播放：在本地播放接收到的视频流。
+	调整播放设置：如调整音量、亮度、对比度等播放参数。
+
+命令：ffmpeg -re -i E:\vlc\test.mp4 -c copy -rtsp_transport tcp -f rtsp rtsp://172.20.31.57:8554/stream1
+解释：
+	ffmpeg: 调用ffmpeg程序。
+	-re: 以本地帧率读取输入文件。这对于模拟实时流媒体传输非常有用，确保发送的数据流的速度与原始视频的速度相匹配。
+	-i C:\Users\suolide-zjq\Desktop\mp4\1.mp4: 指定输入文件，这里是位于C:\Users\suolide-zjq\Desktop\mp4\目录下的1.mp4文件。
+	-c copy: 表示在编码过程中不对视频和音频流进行重新编码，直接复制。这可以大大节省处理时间和保持原始质量，但前提是原始编码格式与目标流媒体服务器或客户端兼容。
+	-rtsp_transport tcp: 指定RTSP传输层使用TCP协议。RTSP（Real Time Streaming Protocol）是一种网络控制协议，用于控制流媒体数据的传输。TCP（Transmission Control Protocol）是一种可靠的、面向连接的协议，尽管可能引入一些延迟，但能够确保数据的完整性和顺序。
+	-f rtsp: 指定输出文件的格式是RTSP。这告诉ffmpeg输出应该被格式化为RTSP流，以便可以通过网络进行流媒体传输。
+	rtsp://192.168.2.23:8554/stream: 指定RTSP流的URL。这里，rtsp://是协议部分，192.168.2.23是RTSP服务器的IP地址，8554是服务器监听的端口号，/stream是流的路径或名称。这个URL是ffmpeg将视频流发送到的目的地。
+	
+九、opencv源码编译
+cmake -D CMAKE_BUILD_TYPE=RELEASE\
+    -D CMAKE_INSTALL_PREFIX=/usr/local\
+    -D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib-4.6.0/modules\
+    -D CUDA_ARCH_BIN='8.7'\
+    -D CUDA_ARCH_PTX='8.7' \
+    -D WITH_CUDA=1\
+    -D BUILD_opencv_python3=1\
+    -D WITH_FFMPEG=1 \
+    -D WITH_V4L=ON\
+    -D WITH_QT=ON\
+    -D WITH_OPENGL=ON\
+    -D ENABLE_FAST_MATH=1 \
+    -D CUDA_FAST_MATH=1\
+    -D WITH_CUBLAS=1\
+    -D OPENCV_GENERATE_PKGCONFIG=1\
+    -D WITH_GTK_2_X=ON\
+    -D WITH_GSTREAMER=ON\
+    -D BUILD_TESTS=OFF \
+    -D BUILD_PERF_TESTS=OFF \
+    -D BUILD_EXAMPLES=OFF \
+	-D PYTHON3_EXECUTABLE=/home/orin/software/conda/miniconda3/envs/jetpack_py38/bin/python3.8 \
+	-D PYTHON3_INCLUDE_DIR=$(python3.8 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
+	-D PYTHON3_LIBRARY=/home/orin/software/conda/miniconda3/envs/jetpack_py38/lib/libpython3.8.so \
+	-D PYTHON3_NUMPY_INCLUDE_DIRS=/home/orin/software/conda/miniconda3/envs/jetpack_py38/lib/python3.8/site-packages/numpy/core/include \
+    ..vim
+	
+export LD_PRELOAD=/usr/lib/aarch64-linux-gnu/gstreamer-1.0/libgstnvvideo4linux2.so:/usr/lib/aarch64-linux-gnu/gstreamer-1.0/libgstnvvidconv.so	
+	
+	
