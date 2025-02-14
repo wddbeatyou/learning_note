@@ -346,7 +346,7 @@ pip install ultralytics==8.3.59 -i https://mirrors.aliyun.com/pypi/simple/
     sudo apt install libjpeg-dev zlib1g-dev libpython3-dev libopenblas-dev libavcodec-dev libavformat-dev libswscale-dev 
     unzip vision-release-0.16.zip
     cd vision-release-0.16
-    python3 setup.py install --user
+    python3 setup.py install --user   # 10min的运行时间
 ```
 
 <img src="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250121162637172.png" alt="image-20250121162637172" style="zoom: 50%;" />
