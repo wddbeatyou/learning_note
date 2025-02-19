@@ -1,4 +1,4 @@
-## Jetson nano orin 搭建yolov8视频算法的流程
+##  Jetson nano orin 搭建yolov8视频算法的流程
 
 ### 一、安装JetPack开发环境
 
@@ -53,7 +53,7 @@
         ii  tensorrt       8.5.2.2-1+cuda11.4 arm64        Meta package for TensorRT
   4.检查OpenCV安装情况：
   	命令：
-		dpkg -l tensorrt
+		dpkg -l libopencv
 	输出信息：
 		Desired=Unknown/Install/Remove/Purge/Hold
         | Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
@@ -80,7 +80,7 @@ jtop是一个监控工具，方便查看各个库和包的安装情况和对应�
 	sudo jtop        # 如果启动出现错误的话，请重启一下 Jetson Orin 让这个服务完整启动。
 ```
 
-<img src="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250121141918638.png" alt="image-20250121141918638" style="zoom: 80%;" />
+<img src="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250121141918638.png" alt="image-20250121141918638" style="zoom: 50%;" />
 
 ### 三、**安装 **DeepStream
 
@@ -308,9 +308,9 @@ pip install ultralytics==8.3.59 -i https://mirrors.aliyun.com/pypi/simple/
 	下载onnxruntime_gpu文件时，需要注意jetpack和python版本，不同版本肯能存在不兼容现象；
 ```
 
-<img src="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250121160555494.png" alt="image-20250121160555494" style="zoom: 67%;" />
+<img src="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250121160555494.png" alt="image-20250121160555494" style="zoom: 50%;" />
 
-<img src="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250121160928941.png" alt="image-20250121160928941" style="zoom: 67%;" />
+<img src="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250121160928941.png" alt="image-20250121160928941" style="zoom: 50%;" />
 
 ### 5.3  安装 pytorch 和 torchvision
 
@@ -346,7 +346,7 @@ pip install ultralytics==8.3.59 -i https://mirrors.aliyun.com/pypi/simple/
     sudo apt install libjpeg-dev zlib1g-dev libpython3-dev libopenblas-dev libavcodec-dev libavformat-dev libswscale-dev 
     unzip vision-release-0.16.zip
     cd vision-release-0.16
-    python3 setup.py install --user   # 10min的运行时间
+    python3 setup.py install --user   # 15min的运行时间
 ```
 
 <img src="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250121162637172.png" alt="image-20250121162637172" style="zoom: 50%;" />
@@ -374,7 +374,9 @@ ln -s /usr/lib/python3.8/dist-packages/tensorrt /home/x/archiconda3/envs/yolov8/
 
 ```
 # opencv编译完成后无法直接调用cv2库，需要将编译后的文件移动到虚拟环境中
-cp /home/orin/software/opencv/opencv-4.6.0/build/lib/python3/cv2.cpython-38-aarch64-linux-gnu.so /home/orin/software/conda/miniconda3/envs/jetpack_py38/lib/python3.8/site-packages/
+cp /docker_config/opencv-4.6.0/build/lib/python3/cv2.cpython-38-aarch64-linux-gnu.so /usr/lib/python3.8/site-packages/
+或者
+cp /docker_config/opencv-4.6.0/build/lib/python3/cv2.cpython-38-aarch64-linux-gnu.so /usr/lib/python3.8/dist-packages/
 ```
 
 #### 6.3 虚拟环境中运行python脚本的流程
@@ -391,7 +393,6 @@ cp /home/orin/software/opencv/opencv-4.6.0/build/lib/python3/cv2.cpython-38-aarc
 
 ```
 import cv2
-
 def camera_play(url_cam):
     url_gstream = (
         'rtspsrc location={} ! '

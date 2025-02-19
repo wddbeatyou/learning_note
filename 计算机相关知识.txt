@@ -153,6 +153,8 @@ RUN echo "Installing dependencies..." && apt-get update && apt-get install -y gi
 	docker start 容器名称（或者容器ID）
 18.将容器内的文件复制到本机上
 	docker cp <container_id>:<container_path> <host_path>
+19.这个命令会清理掉所有未被使用的数据，包括未被打标签的镜像、停止的容器、未使用的网络和悬挂的卷。这通常是释放Docker占用空间的最有效方法。
+	docker system prune -a
 
 七.Jetson Orin Nano安装torch调用gpu
 第一步：进入官网：https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
