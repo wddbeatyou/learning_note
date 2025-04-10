@@ -201,9 +201,7 @@ sudo apt install -y python3-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libp
 unzip opencv-4.6.0.zip
 unzip opencv_contrib-4.6.0.zip
 mv opencv_contrib-4.6.0 ./opencv-4.6.0
-cd opencv-4.6.0
-mkdir build
-cd build
+cd opencv-4.6.0 && mkdir build && cd build
 ```
 
 #### 4.5 设置opencv的cmake参数
@@ -263,13 +261,47 @@ cd build
 #### 4.6 编译和编译安装opencv
 
 ```
-sudo make -j8 && sudo make install 
+sudo make -j$(nproc) && sudo make install 
+# opencv编译完成后无法直接调用cv2库，需要将编译后的文件移动到虚拟环境中
+cp /docker_config/opencv-4.6.0/build/lib/python3/cv2.cpython-38-aarch64-linux-gnu.so /usr/lib/python3.8/dist-packages/
 ```
 
 #### 4.7 验证opencv安装情况
 
 ```
 python3 -c "import cv2; print(cv2.__version__)"
+```
+
+#### 4.8 问题
+
+1. ImportError: libopencv_intensity_transform.so.406: cannot open shared object file: No such file or directory
+
+   ```
+    1.查看：sudo find /usr -name "libopencv_intensity_transform.so*"
+        输出：
+           /usr/local/lib/libopencv_intensity_transform.so.406
+           /usr/local/lib/libopencv_intensity_transform.so.4.6.0
+           /usr/local/lib/libopencv_intensity_transform.so
+    2.检查 /etc/ld.so.conf
+    	# 如果输出中没有 /usr/local/lib，则需要手动添加。
+    	命令：echo "/usr/local/lib" | sudo tee /etc/ld.so.conf.d/local.conf
+    3.更新动态链接器缓存
+    	sudo ldconfig
+    4.验证动态链接器配置
+    	# 如果看到 libopencv_intensity_transform.so 的相关输出，说明配置成功。
+    	ldconfig -v | grep libopencv_intensity_transform
+   ```
+
+2.ImportError: /lib/aarch64-linux-gnu/libp11-kit.so.0: undefined symbol: ffi_type_pointer, version LIBFFI_BASE_7.0
+
+```
+sudo ln -s /usr/lib/aarch64-linux-gnu/libffi.so.7.1.0 libffi.so.7 -f
+```
+
+3.E: The repository 'https://download.docker.com/linux/ubuntu focal Release' is not signed.
+
+```
+sudo chmod 644 /usr/share/keyrings/docker-archive-keyring.gpg
 ```
 
 ### 五、yolov8环境搭建
@@ -333,6 +365,8 @@ pip install ultralytics==8.3.59 -i https://mirrors.aliyun.com/pypi/simple/
 2.下载 torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl
 3.网址：https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
 4.安装：
+	sudo apt-get update
+	sudo apt-get install -y libopenblas-base libopenblas-dev
 	pip install torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl       # 切换至该文件下
 ```
 
@@ -344,8 +378,7 @@ pip install ultralytics==8.3.59 -i https://mirrors.aliyun.com/pypi/simple/
 3.安装：
 	sudo apt install python3-pip libopenblas-base libopenmpi-dev libomp-dev 
     sudo apt install libjpeg-dev zlib1g-dev libpython3-dev libopenblas-dev libavcodec-dev libavformat-dev libswscale-dev 
-    unzip vision-release-0.16.zip
-    cd vision-release-0.16
+    unzip vision-release-0.16.zip && cd vision-release-0.16
     python3 setup.py install --user   # 15min的运行时间
 ```
 
@@ -370,16 +403,7 @@ pip install ultralytics==8.3.59 -i https://mirrors.aliyun.com/pypi/simple/
 ln -s /usr/lib/python3.8/dist-packages/tensorrt /home/x/archiconda3/envs/yolov8/lib/python3.8/site-packages/tensorrt
 ```
 
-#### 6.2 opencv的配置
-
-```
-# opencv编译完成后无法直接调用cv2库，需要将编译后的文件移动到虚拟环境中
-cp /docker_config/opencv-4.6.0/build/lib/python3/cv2.cpython-38-aarch64-linux-gnu.so /usr/lib/python3.8/site-packages/
-或者
-cp /docker_config/opencv-4.6.0/build/lib/python3/cv2.cpython-38-aarch64-linux-gnu.so /usr/lib/python3.8/dist-packages/
-```
-
-#### 6.3 虚拟环境中运行python脚本的流程
+#### 6.2虚拟环境中运行python脚本的流程
 
 ```
 第一步：conda activate jetpack_py38
@@ -389,7 +413,7 @@ cp /docker_config/opencv-4.6.0/build/lib/python3/cv2.cpython-38-aarch64-linux-gn
 	第一步与第二步执行顺序不要弄错；
 ```
 
-#### 6.4  解决网络摄像头模糊问题
+#### 6.3  解决网络摄像头模糊问题
 
 ```
 import cv2

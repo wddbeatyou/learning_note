@@ -159,7 +159,11 @@ taskkill /PID 进程id /F
 例子：
 taskkill /PID 600 /F
 
-3.内存使用情况
+内存使用情况
 df -h       # 检查磁盘空间
 free -m     # 检查内存使用情况
 top/htop         # 查看 CPU 使用情况
+
+22. 使用 dos2unix 转换文件格式
+sudo apt install dos2unix  # 如果未安装，先安装工具
+dos2unix configure        # 转换文件格式

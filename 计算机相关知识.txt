@@ -46,33 +46,15 @@ sed的用法
 RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list && apt-get update && apt-get install -y <package>
 解释：
 -i：这个选项告诉 sed 直接修改文件内容，而不是将结果输出到标准输出（通常是屏幕）。这意味着 /etc/apt/sources.list 文件将被直接修改。
-'s/archive.ubuntu.com/mirrors.aliyun.com/g'：这是 sed 的脚本部分，指定了要执行的编辑操作。s 代表替换（substitute）操作，/ 是分隔符，archive.ubuntu.com 是要被替换的文本，mirrors.aliyun.com 是替换后的文本，g 表示全局替换（即替换行中所有匹配的实例，而不仅仅是第一个）。
+'s/archive.ubuntu.com/mirrors.aliyun.com/g'：这是 sed 的脚本部分，指定了要执行的编辑操作。s 代表替换（substitute）操作，/ 是分隔符，
+archive.ubuntu.com 是要被替换的文本，mirrors.aliyun.com 是替换后的文本，g 表示全局替换（即替换行中所有匹配的实例，而不仅仅是第一个）。
 /etc/apt/sources.list：这是要编辑的文件名。
 
 --no-install-recommends的用法
 RUN apt-get update && apt-get install -y --no-install-recommends <package>
---no-install-recommends 选项指示 apt-get 不要安装推荐的软件包。推荐的软件包是那些被认为与指定软件包一起使用很好的软件包，但它们不是必需的。这个选项可以减小安装后的镜像大小，因为它避免了安装可能不需要的额外软件包。
+--no-install-recommends 选项指示 apt-get 不要安装推荐的软件包。推荐的软件包是那些被认为与指定软件包一起使用很好的软件包，
+但它们不是必需的。这个选项可以减小安装后的镜像大小，因为它避免了安装可能不需要的额外软件包。
 
-增加日志打印
-RUN echo "Installing dependencies..." && apt-get update && apt-get install -y git
-
-五. 镜像源
-{
-  "registry-mirrors": ["https://docker.registry.cyou",
-	"https://docker-cf.registry.cyou",
-	"https://dockercf.jsdelivr.fyi",
-	"https://docker.jsdelivr.fyi",
-	"https://dockertest.jsdelivr.fyi",
-	"https://mirror.aliyuncs.com",
-	"https://dockerproxy.com",
-	"https://mirror.baidubce.com",
-	"https://docker.m.daocloud.io",
-	"https://docker.nju.edu.cn",
-	"https://docker.mirrors.sjtug.sjtu.edu.cn",
-	"https://docker.mirrors.ustc.edu.cn",
-	"https://mirror.iscas.ac.cn",
-	"https://docker.rainbond.cc"]
-}
 
 六.docker镜像运行和打包全过程
 1.配置镜像源
@@ -156,6 +138,31 @@ RUN echo "Installing dependencies..." && apt-get update && apt-get install -y gi
 19.这个命令会清理掉所有未被使用的数据，包括未被打标签的镜像、停止的容器、未使用的网络和悬挂的卷。这通常是释放Docker占用空间的最有效方法。
 	docker system prune -a
 
+20.设置开机自启
+第一步：先启动容器：
+docker run -d --name mediamtx -e MTX_RTSPTRANSPORTS=tcp -p 8554:8554 bluenviron/mediamtx
+docker run -d --name mediamtx \
+  -e MTX_RTSPTRANSPORTS=tcp \
+  -e MTX_WEBRTCADDITIONALHOSTS=172.20.31.102 \
+  -p 8554:8554 \
+  -p 1935:1935 \
+  -p 8888:8888 \
+  -p 8889:8889 \
+  -p 8890:8890/udp \
+  -p 8189:8189/udp \
+  bluenviron/mediamtx
+第二步：设置开机自启：docker update --restart=always mediamtx
+
+21.取消开机自启
+docker update --restart=no mediamtx
+
+22. 彻底禁用 Docker 服务自启（谨慎操作）
+sudo systemctl disable docker
+
+23.恢复 Docker 服务自启
+sudo systemctl enable docker
+
+
 七.Jetson Orin Nano安装torch调用gpu
 第一步：进入官网：https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
 第二步：查看jetpack版本：sudo apt-cache show nvidia-jetpack，如：Version: 5.1.2-b104
@@ -202,33 +209,13 @@ VLC的主要功能包括：
 	-f rtsp: 指定输出文件的格式是RTSP。这告诉ffmpeg输出应该被格式化为RTSP流，以便可以通过网络进行流媒体传输。
 	rtsp://192.168.2.23:8554/stream: 指定RTSP流的URL。这里，rtsp://是协议部分，192.168.2.23是RTSP服务器的IP地址，8554是服务器监听的端口号，/stream是流的路径或名称。这个URL是ffmpeg将视频流发送到的目的地。
 	
-九、opencv源码编译
-cmake -D CMAKE_BUILD_TYPE=RELEASE\
-    -D CMAKE_INSTALL_PREFIX=/usr/local\
-    -D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib-4.6.0/modules\
-    -D CUDA_ARCH_BIN='8.7'\
-    -D CUDA_ARCH_PTX='8.7' \
-    -D WITH_CUDA=1\
-    -D BUILD_opencv_python3=1\
-    -D WITH_FFMPEG=1 \
-    -D WITH_V4L=ON\
-    -D WITH_QT=ON\
-    -D WITH_OPENGL=ON\
-    -D ENABLE_FAST_MATH=1 \
-    -D CUDA_FAST_MATH=1\
-    -D WITH_CUBLAS=1\
-    -D OPENCV_GENERATE_PKGCONFIG=1\
-    -D WITH_GTK_2_X=ON\
-    -D WITH_GSTREAMER=ON\
-    -D BUILD_TESTS=OFF \
-    -D BUILD_PERF_TESTS=OFF \
-    -D BUILD_EXAMPLES=OFF \
-	-D PYTHON3_EXECUTABLE=/home/orin/software/conda/miniconda3/envs/jetpack_py38/bin/python3.8 \
-	-D PYTHON3_INCLUDE_DIR=$(python3.8 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
-	-D PYTHON3_LIBRARY=/home/orin/software/conda/miniconda3/envs/jetpack_py38/lib/libpython3.8.so \
-	-D PYTHON3_NUMPY_INCLUDE_DIRS=/home/orin/software/conda/miniconda3/envs/jetpack_py38/lib/python3.8/site-packages/numpy/core/include \
-    ..vim
-	
-export LD_PRELOAD=/usr/lib/aarch64-linux-gnu/gstreamer-1.0/libgstnvvideo4linux2.so:/usr/lib/aarch64-linux-gnu/gstreamer-1.0/libgstnvvidconv.so	
-	
+九、ZLMediaKit服务
+切换：/home/orin/ZLMediaKit/release/linux/Debug
+运行：./MediaServer 
+
+十、C++模型转换
+命令：/usr/src/tensorrt/bin/trtexec --onnx=best.onnx --saveEngine=best.engine
+
+
+
 	

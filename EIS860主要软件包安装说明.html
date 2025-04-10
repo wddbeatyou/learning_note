@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0113)file:///D:/%E5%88%B7%E6%9C%BA/EIS860%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E8%AF%B4%E6%98%8E.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<title>EIS860主要软件包安装说明</title>
+	<meta name="generator" content="LibreOffice 6.0.7.3 (Linux)">
+	<meta name="created" content="00:00:00">
+	<meta name="changed" content="2024-01-17T15:42:01.431240327">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<style type="text/css">
+		h1 { margin-left: 0.21in; margin-right: 0.21in; margin-top: 0.21in; margin-bottom: 0.1in; color: #000000; line-height: 160% }
+		h1.western { font-size: 21pt }
+		h1.cjk { font-family: "Helvetica", "arial", "freesans", "clean", sans-serif; font-size: 21pt }
+		h1.ctl { font-family: "Helvetica", "arial", "freesans", "clean", sans-serif; font-size: 21pt }
+		p { margin-left: 0.16in; margin-right: 0.16in; margin-top: 0.1in; margin-bottom: 0.16in; color: #333333; font-family: "Helvetica", "arial", "freesans", "clean", sans-serif; font-size: 10pt; line-height: 160% }
+		h2 { margin-left: 0.21in; margin-right: 0.21in; margin-top: 0.21in; margin-bottom: 0.1in; border-top: none; border-bottom: 1px solid #cccccc; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.02in; padding-left: 0in; padding-right: 0in; color: #000000; line-height: 160% }
+		h2.cjk { font-family: "Noto Sans CJK SC" }
+		h2.ctl { font-family: "Lohit Devanagari" }
+		pre { margin-left: 0.16in; margin-right: 0.16in; margin-top: 0.16in; margin-bottom: 0.16in; background: #f8f8f8; border: 1px solid #cccccc; padding: 0.06in 0.1in; color: #333333; font-family: "Consolas", "Liberation Mono", "Courier", monospace; font-size: 9pt; line-height: 0.2in }
+		a:link { color: #4183c4; text-decoration: none }
+		code { font-family: "Consolas", "Liberation Mono", "Courier", monospace; font-size: 9pt; background: #f8f8f8 }
+		a:visited { color: #4183c4; text-decoration: none }
+	</style>
+</head>
+<body lang="en-US" text="#333333" link="#4183c4" vlink="#4183c4" bgcolor="#ffffff" dir="ltr" style="border: none; padding: 0in">
+<h1 class="western">EIS860<font face="Helvetica, arial, freesans, clean, sans-serif"><span lang="zh-CN"><font face="Helvetica, arial, freesans, clean, sans-serif"><span lang="zh-CN">主要软件包安装说明</span></font></span></font></h1>
+<h2 class="western"><font face="Noto Sans CJK SC"><span lang="zh-CN">一、更新软件包</span></font></h2>
+<pre><code>sudo apt update</code></pre><h2 class="western">
+<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">二、安装</span></font></span></font>JetPack<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">开发环境</span></font></span></font></h2>
+<pre><code>sudo apt install nvidia-jetpack</code></pre><h2 class="western">
+1. <font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">修改</span></font></span></font>cuda<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">的环境变量</span></font></span></font></h2>
+<pre><code>sudo gedit ~/.bashrc</code></pre><p>
+<span lang="zh-CN">写入如下内容：</span></p>
+<pre><code>export CUDA_HOME=/usr/local/cuda-11.4</code>
+<code>export LD_LIBRARY_PATH=/usr/local/cuda-11.4/lib64:$LD_LIBRARY_PATH</code>
+<code>export PATH=/usr/local/cuda-11.4/bin:/usr/local/bin/cmake:$PATH</code></pre><p>
+<span lang="zh-CN">保存退出，更新环境变量</span></p>
+<pre><code>source ~/.bashrc</code></pre><h2 class="western">
+2.<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">检查开发环境安装结果</span></font></span></font></h2>
+<p><span lang="zh-CN"><span lang="zh-CN"><b>（</b></span></span><b>1</b><span lang="zh-CN"><span lang="zh-CN"><b>）</b></span></span><b>CUDA</b><span lang="zh-CN"><span lang="zh-CN"><b>：执行以下指令</b></span></span></p>
+<pre><code><span style="font-weight: normal">nvcc -V</span></code></pre><p>
+<span lang="zh-CN">如果出现以下信息则表示正确。</span></p>
+<pre><code>nvcc: NVIDIA (R) Cuda compiler driver</code>
+<code>Copyright (c) 2005-2022 NVIDIA Corporation</code>
+<code>Built on Sun_Oct_23_22:16:07_PDT_2022</code>
+<code>Cuda compilation tools, release 11.4, V11.4.315</code>
+<code>Build cuda_11.4.r11.4/compiler.31964100_0</code></pre><p>
+<span lang="zh-CN"><span lang="zh-CN"><b>（</b></span></span><b>2</b><span lang="zh-CN"><span lang="zh-CN"><b>）</b></span></span><b>cuDNN</b><span lang="zh-CN"><span lang="zh-CN"><b>：执行以下指令</b></span></span></p>
+<pre><code><span style="font-weight: normal">dpkg -l libcudnn8</span></code></pre><p>
+<span lang="zh-CN">如果出现以下信息则表示正确。</span></p>
+<pre><code>Desired=Unknown/Install/Remove/Purge/Hold</code>
+<code>| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend</code>
+<code>|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)</code>
+<code>||/ Name           Version              Architecture Description</code>
+<code>+++-==============-====================-============-==========================&gt;</code>
+<code>ii  libcudnn8      8.6.0.166-1+cuda11.4 arm64        cuDNN runtime libraries</code></pre><p>
+<span lang="zh-CN"><span lang="zh-CN"><b>（</b></span></span><b>3</b><span lang="zh-CN"><span lang="zh-CN"><b>）</b></span></span><b>TensorRT</b><span lang="zh-CN"><span lang="zh-CN"><b>：执行以下指令</b></span></span></p>
+<pre><code><span style="font-weight: normal">dpkg -l tensorrt</span></code></pre><p>
+<span lang="zh-CN">如果出现以下信息则表示正确。</span></p>
+<pre><code>Desired=Unknown/Install/Remove/Purge/Hold</code>
+<code>| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend</code>
+<code>|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)</code>
+<code>||/ Name           Version            Architecture Description</code>
+<code>+++-==============-==================-============-============================&gt;</code>
+<code>ii  tensorrt       8.5.2.2-1+cuda11.4 arm64        Meta package for TensorRT</code></pre><p>
+<span lang="zh-CN"><span lang="zh-CN"><b>（</b></span></span><b>4</b><span lang="zh-CN"><span lang="zh-CN"><b>）</b></span></span><b>OpenCV</b><span lang="zh-CN"><span lang="zh-CN"><b>：执行以下指令</b></span></span></p>
+<pre><code><span style="font-weight: normal">dpkg -l libopencv</span></code></pre><p>
+<span lang="zh-CN">如果出现以下信息则表示正确。</span></p>
+<pre><code>Desired=Unknown/Install/Remove/Purge/Hold</code>
+<code>| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend</code>
+<code>|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)</code>
+<code>||/ Name           Version             Architecture Description</code>
+<code>+++-==============-===================-============-===========================&gt;</code>
+<code>ii  libopencv      4.5.4-8-g3e4c170df4 arm64        Open Computer Vision Library</code></pre><h2 class="western">
+<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">三、安装</span></font></span></font>jtop<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">系统监控工具</span></font></span></font></h2>
+<pre><code>sudo apt install python3-pip</code>
+<code>sudo -H pip3 install -U pip</code>
+<code>sudo -H pip install jetson-stats</code></pre><p>
+<font face="Noto Sans CJK SC"><span lang="zh-CN">然后执行下面启动指令就能开启这个监控工具：</span></font></p>
+<pre><code>sudo jtop</code></pre><p>
+<span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">如果启动出现错误的话，请重启一下
+</span></font></span>Jetson Orin <span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">让这个服务完整启动。</span></font></span></p>
+<h2 class="western"><font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">四、</span></font><font color="#000000"><font face="Noto Sans CJK SC"><font size="5" style="font-size: 18pt"><span lang="zh-CN"><b>安装</b></span></font></font></font></span></font><font color="#000000"><font face="Liberation Serif, serif"><font size="5" style="font-size: 18pt"><b>DeepStream</b></font></font></font></h2>
+<h2 class="western">1. <font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">安装依赖</span></font></span></font></h2>
+<pre><code>sudo apt install -y libssl-dev libgstreamer1.0-0 gstreamer1.0-tools gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav libgstrtspserver-1.0-0 libjansson-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev libgstrtspserver-1.0-dev libx11-dev libyaml-cpp-dev</code></pre><h2 class="western">
+2. <font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">重新安装</span></font></span></font>nvidia-l4t<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">的相关库</span></font></span></font></h2>
+<pre><code>sudo apt install --reinstall -y nvidia-l4t-gstreamer nvidia-l4t-multimedia nvidia-l4t-core</code></pre><h2 class="western">
+3. <font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">安装</span></font></span></font>DeepStream-6.2</h2>
+<pre><code>sudo tar -xvf deepstream_sdk_v6.2.0_jetson.tbz2 -C /</code>
+<code>cd /opt</code><code><span style="font-variant: normal"><span style="font-style: normal">/nvidia/deepstream/deepstream-6.2</span></span></code>
+<code><span style="font-variant: normal"><span style="font-style: normal">sudo ./install.sh</span></span></code>
+<code><span style="font-variant: normal"><span style="font-style: normal">sudo ldconfig</span></span></code></pre><h2 class="western">
+4. <font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">检查安装是否正确</span></font></span></font></h2>
+<pre><code>deepstream-app  --version-all</code></pre><p>
+<span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN"><span style="font-weight: normal">第一次执行会出现一些警告（</span></span></font></span><span style="font-weight: normal">warning</span><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN"><span style="font-weight: normal">）信息，再执行一次就会正常出现：</span></span></font></span></p>
+<pre><code>deepstream-app version 6.2.0</code>
+<code>DeepStreamSDK 6.2.0</code>
+<code>CUDA Driver Version: 11.4</code>
+<code>CUDA Runtime Version: 11.4</code>
+<code>TensorRT Version: 8.5</code>
+<code>cuDNN Version: 8.6</code>
+<code>libNVWarp360 Version: 2.0.1d3</code></pre><p>
+<font face="Noto Sans CJK SC"><span lang="zh-CN">这样就表示安装完成了。</span></font></p>
+<h2 class="western"><font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">五、编译安装</span></font></span></font>opencv-4.6.0<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">（支持
+</span></font></span></font>cuda<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">加速和</span></font></span></font>gstream<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">编译），其他版本类似</span></font></span></font></h2>
+<h2 class="western">1. <font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">卸载</span></font></span></font>opencv</h2>
+<pre><code>sudo apt purge libopencv*</code>
+<code>sudo apt autoremove</code>
+<code>sudo apt update</code></pre><h2 class="western">
+2. <font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">安装依赖</span></font></span></font></h2>
+<pre><code>sudo apt install -y build-essential checkinstall cmake pkg-config yasm git gfortran</code>
+<code>sudo apt update</code>
+<code>sudo apt install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev</code>
+<code>sudo apt install -y software-properties-common</code>
+<code>sudo apt update</code>
+<code>sudo add-apt-repository "deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial main multiverse restricted universe"</code>
+<code>sudo apt update</code>
+<code>sudo apt install -y libjasper1 libjasper-dev</code>
+<code>sudo apt install -y libjpeg8-dev libpng-dev libtiff5-dev libavcodec-dev libavformat-dev libswscale-dev libdc1394-22-dev libxine2-dev libv4l-dev</code>
+<code>sudo apt install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgtk2.0-dev libtbb-dev libatlas-base-dev libfaac-dev libmp3lame-dev libtheora-dev libvorbis-dev libxvidcore-dev libopencore-amrnb-dev libopencore-amrwb-dev x264 v4l-utils</code>
+<code>sudo apt install -y python3-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libdc1394-22-dev</code></pre><h2 class="western">
+3.
+<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">解压下载好的</span></font></span></font>opencv-4.6.0<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">和</span></font></span></font>opencv_contrib-4.6.0<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">，将解压后的</span></font></span></font>opencv_contrib-4.6.0<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">放在</span></font></span></font>opencv-4.6.0<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">文件中，进入</span></font></span></font>opencv-4.6.0<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">，并新建文件夹用于编译</span></font></span></font></h2>
+<pre><code>cd opencv-4.6.0</code>
+<code>mkdir build</code>
+<code>cd build</code></pre><h2 class="western">
+4. <font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">设置</span></font></span></font>opencv<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">的</span></font></span></font>cmake<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">参数</span></font></span></font></h2>
+<pre><code>cmake -D CMAKE_BUILD_TYPE=RELEASE\</code>
+<code>    -D CMAKE_INSTALL_PREFIX=/usr/local\</code>
+<code>    -D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib-4.6.0/modules\</code>
+<code>    -D CUDA_ARCH_BIN='8.7'\</code>
+<code>    -D CUDA_ARCH_PTX='8.7' \</code>
+<code>    -D WITH_CUDA=1\</code>
+<code>    -D BUILD_opencv_python3=1\</code>
+<code>    -D BUILD_opencv_python2=1\</code>
+<code>    -D WITH_FFMPEG=1 \</code>
+<code>    -D WITH_V4L=ON\</code>
+<code>    -D WITH_QT=ON\</code>
+<code>    -D WITH_OPENGL=ON\</code>
+<code>    -D ENABLE_FAST_MATH=1 \</code>
+<code>    -D CUDA_FAST_MATH=1\</code>
+<code>    -D WITH_CUBLAS=1\</code>
+<code>    -D OPENCV_GENERATE_PKGCONFIG=1\</code>
+<code>    -D WITH_GTK_2_X=ON\</code>
+<code>    -D WITH_GSTREAMER=ON\</code>
+<code>    -D BUILD_TESTS=OFF \</code>
+<code>    -D BUILD_PERF_TESTS=OFF \</code>
+<code>    -D BUILD_EXAMPLES=OFF \</code>
+<code>    ..</code></pre><h2 class="western">
+5. <font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">编译和编译安装</span></font></span></font>opencv</h2>
+<pre><code>sudo make -j8 &amp;&amp; sudo make install </code></pre><h2 class="western">
+6. <font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">配置</span></font></span></font>opencv<font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">动态链接库</span></font></span></font></h2>
+<pre><code>sudo gedit /etc/ld.so.conf.d/opencv.conf</code></pre><p>
+<font face="Noto Sans CJK SC"><span lang="zh-CN">在打开的文件中加入以下语句：</span></font></p>
+<pre><code><span style="font-variant: normal"><span style="font-style: normal">/usr/local/lib</span></span></code></pre><p>
+<font face="Noto Sans CJK SC"><span lang="zh-CN">执行以下语句生效：</span></font></p>
+<pre><code><span style="font-variant: normal"><span style="font-style: normal">sudo ldconfig</span></span></code></pre><h2 class="western">
+7. <font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">配置</span></font></span></font>pkg-config</h2>
+<pre><code>sudo gedit /etc/bash.bashrc</code></pre><p>
+<font face="Noto Sans CJK SC"><span lang="zh-CN">在打开的文件末尾加入以下语句：</span></font></p>
+<pre><code><span style="font-variant: normal"><span style="font-style: normal">PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig</span></span></code>
+<code><span style="font-variant: normal"><span style="font-style: normal">export PKG_CONFIG_PATH</span></span></code></pre><p>
+<font face="Noto Sans CJK SC"><span lang="zh-CN">执行以下语句生效：</span></font></p>
+<pre><code><span style="font-variant: normal"><span style="font-style: normal">source /etc/bash.bashrc</span></span></code></pre><h2 class="western">
+8. <font face="Noto Sans CJK SC"><span lang="zh-CN"><font face="Noto Sans CJK SC"><span lang="zh-CN">环境配置验证</span></font></span></font></h2>
+<pre><code>find ./ -name opencv4.pc    #</code><span lang="zh-CN"><code><span lang="zh-CN">出现</span></code></span><code>./unix-install/opencv4.pc</code><span lang="zh-CN"><code><span lang="zh-CN">表示正常</span></code></span>
+<code>pkg-config --cflags opencv4  #</code><span lang="zh-CN"><code><span lang="zh-CN">出现</span></code></span><code>-I/usr/local/include/opencv4</code><span lang="zh-CN"><code><span lang="zh-CN">表示正常</span></code></span></pre><h2 class="western">
+<br>
+<br>
+
+</h2>
+<p><!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) --></p>
+
+</body></html>
