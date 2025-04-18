@@ -15,8 +15,7 @@
         sudo chmod +x /usr/local/bin/docker-compose
         docker-compose --version
 第二步：
-	curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | sudo apt-key add -
-    distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+	curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | sudo apt-key add - distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
     curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
     sudo apt-get update
 第三步：修改（宿主机）文件“sudo vim /etc/apt/sources.list.d/nvidia-container-runtime.list”，将版本“18.04”改成“20.04”；
@@ -35,7 +34,7 @@
 	nvidia-docker2：最初主要是为 x86_64 架构设计的，虽然也在一定程度上支持其他架构，但对于 ARM64 架构的支持可能不够完善，在 Jetson Orin Nano 这类 ARM64 设备上使用可能会出现兼容性问题，导致安装失败或无法正常使用 GPU 资源。
 ```
 
-<img src="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250219104346666.png" alt="image-20250219104346666" style="zoom:50%;" />
+<img src="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250219104346666.png" alt="image-20250219104346666" style="zoom: 80%;" />
 
 ### 2.拉取镜像
 
@@ -61,7 +60,7 @@ docker exec -it video_arm64 bash   # 进入容器
 ### 3.安装cuda，cudnn和tensorrt
 
 ```
-cudnn安装：
+cuda安装：
 	apt install cuda
 检查：
 	nvcc -V

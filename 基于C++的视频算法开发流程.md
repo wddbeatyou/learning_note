@@ -6,6 +6,7 @@
 
 ```
 sudo apt update
+sudo apt install openssh-server
 sudo apt install nvidia-jetpack
 ```
 
@@ -74,10 +75,10 @@ sudo -H pip install jetson-stats
 	# cd cmake-3.27.7
 	cd CMake-3.27.7
 配置编译选项
-	./bootstrap --prefix=/usr/local/cmake-3.27.7
+	./bootstrap --prefix=/usr/local/cmake-3.27.7    // 15min左右
 
 编译源码
-	make -j$(nproc)
+	make -j$(nproc)  //10min左右
 
 安装 CMake
 	sudo make install
@@ -86,8 +87,7 @@ sudo -H pip install jetson-stats
     echo 'export PATH=/usr/local/cmake-3.27.7/bin:$PATH' >> ~/.bashrc
     source ~/.bashrc
 修改权限（可选，如果不修改权限，后续执行该命令时加上sudo）
-	sudo chmod a+x /usr/local/cmake-3.27.7/bin/cmake 
-    sudo chown -R $USER:$USER /usr/local/cmake-3.27.7
+    sudo chown -R orin:orin /usr/local/cmake-3.27.7
 验证安装
     cmake --version
 ```
@@ -96,6 +96,7 @@ sudo -H pip install jetson-stats
 
 ```
 下载：
+	sudo apt install -y build-essential checkinstall pkg-config yasm git gfortran
     git clone https://github.com/Keylost/jetson-ffmpeg.git
 	cd jetson-ffmpeg && mkdir build && cd build
 编译：
@@ -116,9 +117,9 @@ sudo -H pip install jetson-stats
 依赖：
 	sudo apt install libx264-dev libx265-dev
 配置：
-	./configure --enable-nonfree --enable-gpl --enable-cuda-nvcc --enable-nvmpi --enable-libx264 --enable-libx265 --extra-cflags="-I/usr/local/cuda-11.4/include -fPIC" --extra-ldflags="-L/usr/local/cuda-11.4/lib64" --nvcc="/usr/local/cuda-11.4/bin/nvcc" --enable-shared
+	sudo ./configure --enable-nonfree --enable-gpl --enable-cuda-nvcc --enable-nvmpi --enable-libx264 --enable-libx265 --extra-cflags="-I/usr/local/cuda-11.4/include -fPIC" --extra-ldflags="-L/usr/local/cuda-11.4/lib64" --nvcc="/usr/local/cuda-11.4/bin/nvcc" --enable-shared
 编译：
-    make -j$(nproc)
+    sudo make -j$(nproc)
     sudo make install
     sudo ldconfig
 查看：
@@ -141,7 +142,7 @@ sudo -H pip install jetson-stats
 
 ```
 安装依赖：
-	sudo apt install -y build-essential checkinstall pkg-config yasm git gfortran
+	#sudo apt install -y build-essential checkinstall pkg-config yasm git gfortran
     sudo apt update
     sudo apt install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
     sudo apt install -y software-properties-common
@@ -196,14 +197,62 @@ sudo -H pip install jetson-stats
 	sudo chmod -R a+r /usr/local/include/opencv4
 ```
 
-### 六、ffmpeg 推流
+### 六、docker及docker compose安装
+
+```
+sudo apt-get update
+sudo apt-get install -y docker.io
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+查看：
+	docker compose --version
+	docker --version
+配置镜像源：
+sudo vim /etc/docker/daemon.json
+添加以下内容：
+	{ 
+        "registry-mirrors": ["https://jockerhub.com/",
+                            "https://docker.rainbond.cc", 
+                            "https://mirror.iscas.ac.cn", 
+                            "https://docker.mirrors.ustc.edu.cn",
+                            "https://docker.mirrors.sjtug.sjtu.edu.cn",
+                            "https://docker.nju.edu.cn",
+                            "https://docker.m.daocloud.io",
+                            "https://mirror.baidubce.com",
+                            "https://dockerproxy.com",
+                            "https://mirror.aliyuncs.com",
+                            "https://dockertest.jsdelivr.fyi",
+                            "https://docker.jsdelivr.fyi",
+                            "https://dockercf.jsdelivr.fyi",
+                            "https://docker-cf.registry.cyou",
+                            "https://docker.registry.cyou"],
+        "runtimes": {
+            "nvidia": { 
+                "path": "nvidia-container-runtime", 
+                "runtimeArgs": [] 
+            } 
+        } 
+    }
+将当前用户加入 docker 组：
+    sudo usermod -aG docker $USER
+    newgrp docker
+重启docker服务：	
+    sudo systemctl daemon-reload
+    sudo systemctl restart docker
+拉取镜像：
+	docker pull bluenviron/mediamtx:latest
+设置开机自启：
+	docker run -d --name mediamtx -e MTX_RTSPTRANSPORTS=tcp -p 8554:8554 bluenviron/mediamtx
+	docker update --restart=always mediamtx
+```
+
+### 七、ffmpeg 推流
 
 ```
 ffmpeg -i ./test.mp4 -c:v h264_nvmpi -preset fast ./output.mp4
 ffmpeg -stream_loop -1 -re -i test.mp4 -c:v libx264 -preset fast -tune zerolatency -rtsp_transport tcp -f rtsp rtsp://172.20.31.102:8554/live/stream
 ```
 
-### 七、修改文件权限
+### 八、修改文件权限
 
 ```
 sudo chown -R orin:orin /usr/local/include/libswscale
@@ -212,15 +261,21 @@ sudo chown -R orin:orin /usr/local/include/libavcodec/
 ...
 ```
 
-### 八、安装mysql
+### 九、安装mysql
 
 ```
 sudo apt-get install libmysqlcppconn-dev
 ```
 
-### 九、**安装 nlohmann/json 库**
+### 十、**安装 nlohmann/json 库**
 
 ```
 sudo apt-get install nlohmann-json3-dev
+```
+
+### 十一、安装 Eigen3
+
+```
+sudo apt-get install libeigen3-dev
 ```
 

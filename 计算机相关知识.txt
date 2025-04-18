@@ -61,9 +61,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends <package>
 	sudo vim /etc/docker/daemon.json
 	添加：
 	{
-	  "registry-mirrors": ["https://f3c2bqrx.mirror.aliyuncs.com","https://jockerhub.com"]
-	}
-	{
 	  "registry-mirrors": ["https://docker.registry.cyou",
 							"https://docker-cf.registry.cyou",
 							"https://dockercf.jsdelivr.fyi",
