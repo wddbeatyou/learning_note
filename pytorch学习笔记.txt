@@ -1,0 +1,73 @@
+网址：https://blog.csdn.net/weixin_45526117/article/details/123009192
+1.tensor 初始化
+含义：张量是一种特殊的数据结构，与数组矩阵类似；
+import torch 
+import numpy as np
+
+# 直接数据
+data=[[1,2],[3,4]]
+x_data=torch.tensor(data)
+
+# numpy 数组
+np_array=np.array(data)
+x_np=torch.from_numpy(np_array)
+
+# 从另一个tensor
+x_ones=torch.ones_like(x_data)#保留shape,datatype
+print(f'ones tensor:\n{x_ones}\n')
+x_rands=torch.rand_like(x_data,dtype=torch.float)#保留shape
+print(f'random tensor:\n{x_rands}\n')
+
+shape=(2,3,)
+rand_tensor=torch.rand(shape)
+ones_tensor=torch.ones(shape)
+zeros_tensor=torch.zeros(shape)
+print(rand_tensor)
+print(ones_tensor)
+print(zeros_tensor)
+
+2.tensor 性质
+shape,datatype,device(存储位置）
+tensor=torch.rand(3,4)
+print(tensor.shape,'\n',tensor.dtype,'\n',tensor.device)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

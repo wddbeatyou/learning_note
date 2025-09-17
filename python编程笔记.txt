@@ -1,0 +1,101 @@
+1.comet_ml模块：（网址：https://devpress.csdn.net/bigdata/62f3fb4b7e6682346618795e.html）
+
+含义：Comet ML 是一个在线平台,允许跟踪实验。 Comet ML 的主要优点是我可以轻松构建报告仪表板和监控系统。
+Comet ML 提供以下功能:
+1）比较实验:我可以很容易地为同一个项目构建不同的实验,并比较结果,在指标、系统指标、参数等方面;监控模型:我可以监控从早期阶段到生产的模型。这可以通过警报和调试策略来完成;
+2）与其他人协作:我可以与其他人共享我的工作空间项目;
+3）构建报表和面板:从我的实验结果开始,我可以轻松构建报表和仪表板;将我的项目公开或公开。
+
+2.yaml模块：（网址：https://blog.csdn.net/QLeelq/article/details/121431781）
+含义：YAML是一种简洁的非标记语言，用来写配置文件非常方便。其以数据为中心，使用空白，缩进，分行组织数据，从而使得表示更加简洁。
+yaml文件的规则：
+1）大小写敏感；
+2）使用缩进表示层级关系；
+3）使用空格键缩进，而非Tab键缩进
+4）缩进的空格数目不重要，只需要相同层级的元素左侧对齐；
+5）文件中的字符串不需要使用引号标注，但若字符串包含有特殊字符则需用引号标注；
+6）注释标识为#
+
+yaml文件数据结构：
+1）对象：键值对的集合（简称 “映射或字典”）
+               键值对用冒号 “:” 结构表示，冒号与值之间需用空格分隔
+2）数组：一组按序排列的值（简称 “序列或列表”）
+              数组前加有 “-” 符号，符号与值之间需用空格分隔
+3）纯量(scalars)：单个的、不可再分的值（如：字符串、bool值、整数、浮点数、时间、日期、null等）
+	           None值可用null，也可 ~ 表示
+
+3.pathlib 模块：（网址：https://blog.csdn.net/weixin_39883129/article/details/110644939）
+含义：作用是导入Python标准库中的pathlib模块中的Path类,用于处理文件路径和文件系统操作。
+
+4.argparse模块：（网址：https://blog.csdn.net/weixin_44721375/article/details/105359756）
+含义：主要用于编写命令行接口：对于程序所需要的参数，它可以进行正确的解析。通俗一点说，就是我们在终端敲入命令，
+          命令中所涉及的参数，可以通过利用argparse编写的程序实现对应和配置，并且它可以判断你命令行中设置的相关参数
+          是否符合要求，对此，argparse也有help和usage来帮助你更好的敲入命令。
+1）parser = argparse.ArgumentParser()
+使用argparse的第一步是创建ArgumentParser对象，该函数就是在开头介绍一下该代码块是用来干什么。
+2）parser.add_argument()：这才是该模块中最重要的函数！
+      调用add_argument()添加命令行参数信息，这些信息告诉ArgumentParser对象如何处理命令行参数。
+我们最后在main模块中可以通过调用parse_agrs()来使用这些命令行参数。
+3）args = parser.parse_args()
+      通过调用parse_args()来解析ArgumentParser对象中保存的命令行参数：将命令行参数解析成相应的数据类型并采取相应的动作。
+在实际的python脚本中，parse_args()一般并不使用参数。
+
+5.pd.read_csv()的详细介绍（网址：https://www.cnblogs.com/traditional/p/12514914.html）
+
+6.os.path.dirname(__file__)、os.path.abspath(__file__)的用法
+os.path.dirname(file)返回的是.py文件的目录
+os.path.abspath(file)返回的是.py文件的绝对路径（完整路径）
+
+7.pickle模块详解
+该pickle模块实现了用于序列化和反序列化Python对象结构的二进制协议。
+pickle协议和JSON（JavaScript Object Notation）的区别 ：
+　　1）. JSON是一种文本序列化格式（它输出unicode文本，虽然大部分时间它被编码utf-8），而pickle是二进制序列化格式;
+　　2）. JSON是人类可读的，而pickle则不是;
+　　3）. JSON是可互操作的，并且在Python生态系统之外广泛使用，而pickle是特定于Python的;
+
+8.pyaudio模块（网址：https://blog.csdn.net/c602273091/article/details/46502527#pyaudio）
+ pyaudio库，使用这个可以进行录音，播放，生成wav文件等等。PyAudio 提供了 PortAudio 的 Python 语言版本，
+这是一个跨平台的音频 I/O 库，使用 PyAudio 你可以在 Python 程序中播放和录制音频。
+为PoTaTudio提供Python绑定，跨平台音频I/O库。使用PyAudio，您可以轻松地使用Python在各种平台上播放和录制音频，
+例如GNU/Linux、微软Windows和苹果Mac OS X/MACOS。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

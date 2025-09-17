@@ -1,0 +1,163 @@
+1.QFrame
+	容器功能：QFrame首先是一个容器，可以包含其他控件或布局，这使得它成为组织和管理用户界面元素的重要工具。
+	边框效果：QFrame提供了多种边框样式，包括凸起、凹下、阴影等，以及自定义边框线宽的能力。这些边框效果可以极大地提升用户界面的美观度和专业性。
+	占位符框架：QFrame还可以用作占位符框架，在界面中预留空间或作为布局的一部分。这在进行界面设计时非常有用，可以帮助开发者更好地规划和组织界面元素。
+
+2.QAction：课件5
+
+3.QPalette 
+	用于管理控件或窗体颜色信息的类。它相当于一个调色板，包含了控件在不同状态下的颜色设置，如背景色、文本色、边框色等。
+	每个Qt控件（如按钮、标签、文本框等）都有一个与之关联的QPalette对象，该对象定义了控件在不同状态下的外观。
+	
+4.QPainter
+	QPainter主要用于在控件或窗体上进行绘图操作，如绘制形状、文本、图像等。它提供了丰富的绘图API，允许开发者在指定的位置绘制各种图形对象，
+	并支持高级特性如反锯齿、透明度、渐变填充等。
+	
+5.QPixmap
+	在图像显示方面性能更优，因为它针对屏幕分辨率进行了优化，并且利用了底层图形系统的硬件加速功能。
+	主要用于在图形用户界面（GUI）上显示图像，特别是在需要频繁绘制、移动或缩放图像时。
+6.QImage
+	在处理大量图像数据或进行复杂图像处理时，QImage可能表现出更高的性能。
+	适用于需要进行复杂图像处理或分析的场景，如滤镜效果、图像合成等。
+7.QIcon
+设计目的：
+	QIcon类主要用于表示和处理图标。
+	通常用于按钮、工具栏和其他用户界面组件上的图标显示。
+	可以为同一个图标定义多个状态（例如，正常、禁用、选中等），并根据窗口的状态自动重绘图标。
+8.QSplitter
+	QSplitter是Qt框架中的一个类，用于创建一个可以包含和分隔子窗口部件（widgets）的容器，允许用户通过拖动分隔条来调整这些子窗口部件的大小。
+
+9.QGraphicsScene
+	QGraphicsScene是一个二维场景，用于存储和管理2D图形项（QGraphicsItem）。
+10.QGraphicsItem
+	通过继承QGraphicsItem类，可以创建自定义的图形项，并实现特定的绘制和交互逻辑。
+11.QGraphicsView
+	QGraphicsView依赖于QGraphicsScene，将QGraphicsScene中的图形项显示在其视图窗口中。通过设置QGraphicsView的场景属性，可以指定所使用的QGraphicsScene对象。
+
+三者之间的关系：
+	QGraphicsScene作为图形项的容器，管理着这些图形项并处理它们之间的交互。
+	QGraphicsView作为可视化窗口，用于显示QGraphicsScene中的内容，并提供用户交互功能。
+	QGraphicsItem则是场景中的图形元素，它们可以在QGraphicsScene中进行布局、渲染和交互。
+	简单来说，QGraphicsScene是画布或场景，QGraphicsItem是画布上的图形元素，而QGraphicsView则是展示这个画布和图形元素的窗口。这三者共同协作，构建出了Qt中基于图形的用户界面的基础。
+
+12.QPointF
+	由于使用浮点数坐标，QPointF 提供了更高的精度，适用于需要高精度计算的场景，如数学计算、图形变换和动画等。
+13.QPoint
+	因为使用整数坐标，QPoint 通常用于需要精确像素控制的场景，如屏幕上的像素点定位。
+
+比较：
+	精度：QPointF 提供了比 QPoint 更高的精度，因为它使用浮点数表示坐标。
+	性能：在大多数情况下，整数运算（QPoint）比浮点数运算（QPointF）更快，因为整数运算更简单且硬件优化更好。然而，这种性能差异在大多数图形和界面处理场景中可能并不显著。
+	使用场景：选择使用哪个类通常取决于具体的应用场景。如果需要高精度或进行复杂的数学变换，QPointF 是更好的选择。如果只是在屏幕上绘制像素或处理像素级的布局，QPoint 就足够了。
+
+14.QSlider
+
+15.triggered()与QAction结合使用
+
+16.qrand()
+用于生成一个伪随机数
+
+17.QGroupBox
+	主要用于将相关的控件进行分组显示。它是一个容器类控件，可以包含其他控件，如按钮、标签、文本框等，并通过边框和标题将这些控件在视觉上包裹起来。
+	QGroupBox 通常用于创建有组织结构的用户界面，例如设置对话框或选项面板，以提升用户界面的逻辑性和可读性。
+
+18.QTableView
+
+19.QStandardItemModel
+	支持丰富的数据操作，包括添加、删除、移动和查找项，以及设置项的显示和编辑属性。它广泛用于需要动态数据管理的应用程序中，如文件浏览器、邮件客户端的地址簿等。
+
+20.QItemSelectionModel
+
+21.QRegion
+
+22.viewport()
+
+23.QItemDelegate
+	这个类的主要用途是在Qt的视图（如QTableView或QListView）中自定义项的绘制和编辑行为。通过QItemDelegate，开发者可以灵活地定制单元格（item）的显示和编辑方式，而无需直接修改视图或模型。
+24.QDateTimeEdit
+
+25.QStyleOptionViewItem
+
+26.QModelIndex()
+	充当了视图（View）和模型（Model）之间的桥梁，它允许视图访问和操作模型中的数据。
+
+27.QDataStream
+	处理的是二进制数据，不涉及字符编码的转换，因此更适合处理非文本数据或需要高效存储和传输的数据。
+28.QTextStream 
+	处理的是文本数据，可以自动处理字符编码的转换，并支持多种格式化的输出，如设置字段宽度、填充字符、数字基数等，使得生成格式化的文本输出变得简单快捷。
+
+29.QDir 
+
+30.QStringList
+	QStringList是Qt中用于存储和管理字符串列表的类。
+
+31.QFileInfo
+
+32.QNetworkInterface
+
+33.QHostInfo
+
+34.QNetworkAccessManager
+
+35.QSpinBox
+
+36.QPoint
+
+37.QSqlDatabase
+
+38.QSqlTableModel
+	QSqlTableModel 是一个用于表示和操作数据库表中数据的模型类。它提供了以下功能：
+		数据检索：可以从数据库中检索数据并存储在模型中。
+		数据编辑：支持在模型中直接编辑数据，并可以将更改提交回数据库。
+		数据过滤和排序：允许对模型中的数据进行过滤和排序。
+		信号和槽：提供了与数据更改相关的信号，如数据被插入、更新或删除时的通知。
+		QSqlTableModel 通常用于在视图（如 QTableView 或 QTreeView）中显示数据库表的数据，并支持对这些数据进行编辑。
+
+39.QSqlRelationalTableModel
+	QSqlRelationalTableModel 是 QSqlTableModel 的一个子类，它提供了对数据库中关系型数据的额外支持。QSqlRelationalTableModel 提供了以下额外的功能：
+		关系字段的支持：可以处理数据库中的关系字段，即那些指向其他表中记录的字段。
+		自动加载关联数据：当模型中的一个字段是关系字段时，QSqlRelationalTableModel 可以自动加载并显示与该字段相关联的数据。
+		数据完整性：在编辑和提交更改时，QSqlRelationalTableModel 会考虑数据库中的关系约束，以确保数据的完整性。
+
+39.QDialogButtonBox
+	布局管理：QDialogButtonBox会自动根据对话框的布局方向（水平或垂直）来排列按钮，这使得按钮的排列更加整齐和一致。
+	标准按钮角色：通过指定按钮的角色（如QDialogButtonBox::AcceptRole、QDialogButtonBox::RejectRole、QDialogButtonBox::ResetRole等），
+				  QDialogButtonBox可以自动为按钮分配适当的样式和行为。例如，在Windows上，接受按钮（通常是“确定”或“提交”）可能会显示为带有加粗边框的按钮。
+	简化代码：使用QDialogButtonBox可以减少手动管理按钮布局和样式的代码量，因为很多这些工作都由QDialogButtonBox自动完成了。
+
+40.QLineEdit 
+QLineEdit *lineEdit = new QLineEdit(this);
+lineEdit->setText("Default Text"); //设置默认文本
+QIntValidator *validator = new QIntValidator(0, 100, this);  // 只允许输入0到100的整数
+lineEdit->setValidator(validator);
+QDoubleValidator *validator = new QDoubleValidator(0.0, 100.0, 2, this);  // 允许输入带2位小数的浮点数
+lineEdit->setValidator(validator);
+lineEdit->setPlaceholderText("Enter your text here"); //显示一个占位符文本，当没有输入时显示。
+lineEdit->setMaxLength(10); // 最多输入10个字符
+lineEdit->setEchoMode(QLineEdit::Password); // 将输入内容显示为密码字符（例如，*）
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

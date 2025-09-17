@@ -1,0 +1,153 @@
+一.Docker的安装：（网址：https://learn.microsoft.com/zh-cn/windows/wsl/install-manual#step-4---download-the-linux-kernel-update-package）
+1.安装docker之前，需要先安装WSL2:
+1）以管理员身份打开命令行，输入以下命令：
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+
+2）检查WSL版本的安装要求：
+对于 x64 系统：版本 1903 或更高版本，内部版本为 18362.1049 或更高版本。
+
+注意：若要检查 Windows 版本及内部版本号，选择 Windows 徽标键 + R，然后键入“winver”
+
+3）以管理员身份打开命令行，输入以下命令：
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+
+4）下载 Linux 内核更新包（链接在上面网址中，点击“适用于 x64 计算机的 WSL2 Linux 内核更新包”），并双击运行下载的安装包；
+
+5）将 WSL 2 设置为默认版本，输入以下命令：
+wsl --set-default-version 2
+
+6）安装所选的 Linux 分发
+进入：网址(https://apps.microsoft.com/store/detail/ubuntu-1804-on-windows/9N9TNGVNDL3Q?hl=zh-cn&gl=cn&rtc=1)，
+点击：“Canonical Group Limited”后，再点击“在 Microsoft Store 获取”
+
+注意安装过程中可能会报错，进行以下操作：（网址：https://blog.csdn.net/HphNJU/article/details/119803459）
+a.打开命令行，输入“inetcpl.cpl”
+b.选择高级，勾选 “使用SSL 3.0”、”使用 TLS 1.0“、”使用 TLS 1.1“、”使用 TLS 1.2“；
+c.搜索“查看网络状态和任务”，打开后点击当前连接的网络名称（右侧的蓝色字体），点击属性，
+双击“Internet 协议版本4”，点击“使用下面的DNS服务器地址”，分别输入“4.2.2.2”和“4.2.2.1”点击确定。
+d.后重启电脑。
+
+7）如果WSL2安装成功，输入以下命令进行检验安装情况
+a.输入命令：wsl --list --online，输出结果：
+NAME                                   FRIENDLY NAME
+Ubuntu                                 Ubuntu
+Debian                                 Debian GNU/Linux
+kali-linux                             Kali Linux Rolling
+Ubuntu-18.04                           Ubuntu 18.04 LTS
+Ubuntu-20.04                           Ubuntu 20.04 LTS
+Ubuntu-22.04                           Ubuntu 22.04 LTS
+OracleLinux_7_9                        Oracle Linux 7.9
+OracleLinux_8_7                        Oracle Linux 8.7
+OracleLinux_9_1                        Oracle Linux 9.1
+openSUSE-Leap-15.5                     openSUSE Leap 15.5
+SUSE-Linux-Enterprise-Server-15-SP4    SUSE Linux Enterprise Server 15 SP4
+SUSE-Linux-Enterprise-15-SP5           SUSE Linux Enterprise 15 SP5
+openSUSE-Tumbleweed                    openSUSE Tumbleweed
+
+b.以上输出结果可以正常显示，表示WSL2安装成功了。
+
+2.开始安装docker
+1）进入网址（https://www.docker.com/get-started/），选择windows对应的版本进行安装即可；
+2）安装完成后，输入命令：wsl -l -v，输出结果如下，表示已完成安装：
+  NAME                   STATE           VERSION
+* docker-desktop         Stopped         2
+  docker-desktop-data    Stopped         2
+
+3.docker基本命令
+1）查看docker版本：
+docker version
+
+2）查看镜像：
+docker images
+
+3）查看所有docker容器：
+docker ps -a
+
+4）拉取镜像：
+docker pull 镜像名
+
+5）启动容器：
+docker restart 容器id
+
+6）中止容器
+docker stop 容器id
+
+7）进入容器：
+docker attach 容器id
+docker attach 1e560fca3906 
+docker exec (推荐大家使用 docker exec 命令，因为此命令会退出容器终端，但不会导致容器的停止。)
+docker exec -it 243c32535da7 /bin/bash
+
+8）导出容器：
+docker export 1e560fca3906 > ubuntu.tar
+
+9）导入容器：
+cat docker/ubuntu.tar | docker import - test/ubuntu:v1
+docker import http://example.com/exampleimage.tgz example/imagerepo （通过指定 URL 或者某个目录来导入）
+
+10）删除容器
+docker rm -f 容器id
+docker rm -f 1e560fca3906
+
+11）清理所有处于中止状态的容器
+docker container prune
+
+12）登录docker仓库
+docker login
+
+13）退出 docker仓库
+docker logout
+
+
+
+
+
+
+
+
+
+如何拉取镜像并启动容器
+a.首先拉取镜像可以通过docker pull 【镜像名】，例如docker pull Ubuntu代表的则是拉取Ubuntu镜像
+b.接着可以使用docker images查看本机中所有的镜像
+c.最后可以使用docker run -itd --name ubuntu-test ubuntu /bin/bash命令启动一个容器实例，
+   其中-itd表示以交互式终端切后台运行的模式启动即启动后容器仅在后台运行，不会进入容器实例，
+   –name ubuntu-test 表示给该容器自定义的名字，ubuntu表示使用的镜像;
+d.如果想进入该容器可以使用命令docker exec -it 【CONTAINER ID】 /bin/bash
+   注意：在第三步执行的时候倘若还没有镜像则会自动拉取镜像，这说明第一步并不是必须的。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
