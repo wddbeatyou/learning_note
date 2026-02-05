@@ -1,15 +1,15 @@
 中电：
 账号：P6060751
 邮箱：dongdong.wang15@gientech.com
-密码：Zxh@941112
+密码：Wdd@930817
 
 中控Gitlib代码库
 账号：1695100164@qq.com
 密码：wdd930817
 
 中控上网：
-账号：gdwb
-密码：Gd@123456
+账号：gdwb/20230036
+密码：Gd@123456/Abc@1234
 
 mysql：
 账号：localhost

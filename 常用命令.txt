@@ -171,3 +171,260 @@ dos2unix configure        # 转换文件格式
 23.python脚本生成exe文件
 pyinstaller --onefile --add-data "config.json;." --hidden-import=tkinter --hidden-import=PIL image_compare.py
 pyinstaller --onefile --hidden-import=tkinter --hidden-import=tkinter.ttk image_compare.py
+pyinstaller image_compare_server.spec
+pyinstaller --name=image_compare_server \
+            --add-data "conf:conf" \
+            --add-data "utils:utils" \
+            --onefile \
+            --console \
+            server.py
+
+
+24.查找函数
+grep -r "函数名" 目录
+grep -r "_AppCtx" /opt/nvidia/deepstream/deepstream-7.0
+
+
+25. 在windows系统上对一个c++可执行文件弄成开机自启
+通过注册表设置：
+1.按下Win + R组合键，输入regedit，回车打开注册表编辑器。
+2.如果是当前用户自启，定位到HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run；如果是所有用户自启，定位到HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run。
+3.右侧空白处右键，选择 “新建”>“字符串值”，命名为合适的名称，比如ServerExe。
+4.双击新建的字符串值，在 “数值数据” 栏中输入server.exe的完整路径，例如C:\Program Files\Server\server.exe。
+
+
+26.CCTV取流开发过程
+1.按 Win 键，搜索 "x64 Native Tools Command Prompt for VS 2022"，然后点击进入命令行；
+2.通过命令方式启动vscode:
+	cd D:\company_project\windows\get_cctv_rtsp_url
+	code .
+3.检查编译器：
+	cl --version
+4.修改vscode配置文件
+tasks.json:
+	{
+	  "tasks": [
+		{
+		  "type": "shell",
+		  "label": "C++ Program with MSVC",
+		  "command": "cl",
+		  "args": [
+			"/EHsc",
+			"/std:c++17",
+			"/utf-8",  // 添加这一行解决编码问题
+			"/I", "${workspaceFolder}/json-3.12.0/include",
+			"/I", "${workspaceFolder}/TrinetPlatSdk/include",
+			"/Fe:${workspaceFolder}/build/${fileBasenameNoExtension}.exe",
+			"${file}",
+			"${workspaceFolder}/TrinetPlatSdk/lib/Release/TriNetPlatSdkX64.lib"
+		  ],
+		  "group": {
+			"kind": "build",
+			"isDefault": true
+		  },
+		  "problemMatcher": ["$msCompile"]
+		}
+	  ],
+	  "version": "2.0.0"
+	}
+launch.json:
+	{
+	  "version": "0.2.0",
+	  "configurations": [
+		{
+		  "name": "(MSVC) 启动",
+		  "type": "cppvsdbg",
+		  "request": "launch",
+		  "program": "${workspaceFolder}/build/${fileBasenameNoExtension}.exe",
+		  "args": [],
+		  "stopAtEntry": false,
+		  "cwd": "${fileDirname}",
+		  "environment": [],
+		  "externalConsole": false,
+		  "preLaunchTask": "C++ Program with MSVC"
+		}
+	  ]
+	}
+5.运行程序
+	选择的编译器：
+		(MSVC)启动 preLaunchTask: C++ Program with MSVC
+
+
+27.强制使用宿主机网络构建
+docker build --network=host --no-cache -t form_ocr_helmet_vest__detect_server:latest .
+--network=host：构建时容器不使用独立网络，直接用宿主机的网络栈，此时容器内的 DNS 会自动继承宿主机的解析能力（你之前测试宿主机能正常访问清华源，因此这里能正常解析）。
+--no-cache：清除之前的缓存，确保新的构建逻辑生效。
+
+
+28 
+# 启动服务
+sudo systemctl start video-analysis
+
+# 停止服务
+sudo systemctl stop video-analysis
+
+# 重启服务
+sudo systemctl restart video-analysis
+
+# 查看服务状态
+sudo systemctl status video-analysis
+
+# 查看服务日志
+sudo journalctl -u video-analysis -f
+
+# 禁用开机自启
+sudo systemctl disable video-analysis
+
+# 启用开机自启
+sudo systemctl enable video-analysis
+
+29.定时任务
+# 创建文件
+sudo tee /etc/systemd/system/video-analysis-restart.timer > /dev/null << 'EOF'
+[Unit]
+Description=Restart Video Analysis at 06:00 daily
+Requires=video-analysis.service
+
+[Timer]
+OnCalendar=*-*-* 06:00:00
+Persistent=true
+Unit=video-analysis-restart.service
+
+[Install]
+WantedBy=timers.target
+EOF
+
+sudo tee /etc/systemd/system/video-analysis-restart.service > /dev/null << 'EOF'
+[Unit]
+Description=Restart Video Analysis Service
+After=video-analysis.service
+
+[Service]
+Type=oneshot
+User=orin
+Group=orin
+ExecStart=/usr/bin/systemctl restart video-analysis.service
+StandardOutput=journal
+StandardError=journal
+EOF
+
+# 重新加载并启用
+sudo systemctl daemon-reload
+sudo systemctl enable --now video-analysis-restart.timer
+sudo systemctl disable  video-analysis-restart.timer
+# 查看状态
+sudo systemctl status video-analysis-restart.timer
+
+
+# 查看下次执行时间
+sudo systemctl list-timers --all | grep video-analysis
+
+
+30.定时重启服务器
+
+sudo crontab -e
+
+# 每天13:30重启服务器
+00 22 * * * /usr/sbin/reboot -f
+
+# 查看 crontab 内容
+sudo crontab -l
+
+
+31.查看内存消耗情况
+watch -n 5 "ps -p 10168 -o rss,vsz,pcpu,cmd"
+
+# 每隔 5 秒显示 PID 10168 的内存（MB）、CPU、命令
+watch -n 5 "ps -p 9447 -o rss,vsz,pcpu,cmd | awk 'NR==1{print \"RSS(MB)\\tVSZ(MB)\\tCPU(%)\\tCMD\"} NR>1{printf \"%.2f\\t%.2f\\t%s\\t%s\\n\", \$1/1024, \$2/1024, \$3, \$4}'"
+终止：
+
+1） RSS (Resident Set Size) - 常驻内存集
+当前值: 2,625,068 KB ≈ 2.5 GB
+含义: 进程实际使用的物理内存大小
+说明: 这部分是真正加载到RAM中的内存，不包括交换分区(swap)
+
+2） VSZ (Virtual Memory Size) - 虚拟内存大小
+当前值: 14,688,408 KB ≈ 14 GB
+含义: 进程可以访问的总虚拟地址空间
+说明: 包括物理内存、交换文件、共享库等所有映射的内存区域
+
+3） %CPU - CPU 使用率
+当前值: 134%
+含义: 进程占用CPU核心的百分比
+说明:
+	100% = 1个核心满载
+	134% = 约1.34个核心被持续使用
+	这是多线程程序的典型特征
+
+4） CMD - 命令名称
+值: ./video_analysis
+含义: 正在运行的进程名称
+
+
+32.查看服务器系统时间
+timedatectl status 或 timedatectl
+
+33.离线时间同步的核心逻辑：先手动校准准确系统时间，再将系统时间写入 RTC 硬件时钟实现持久化，后续系统启动时自动从 RTC 读取时间同步到系统时钟。
+
+1.设置系统时间
+sudo date -s "2025-12-29 15:30:45
+或
+sudo date -s "202512291530.45"      (将系统时间设置为「2025 年 12 月 29 日 15 时 30 分 45 秒」)
+
+
+2.查看
+date
+
+3.将校准后的系统时间写入 RTC 硬件时钟（持久化）
+
+# 将系统时间同步到 RTC 硬件时钟
+sudo hwclock -w
+# 验证 RTC 硬件时钟是否写入成功
+sudo hwclock -r
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

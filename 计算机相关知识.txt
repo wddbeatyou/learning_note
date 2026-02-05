@@ -140,7 +140,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends <package>
 docker run -d --name mediamtx -e MTX_RTSPTRANSPORTS=tcp -p 8554:8554 bluenviron/mediamtx
 docker run -d --name latest_mediamtx \
   -e MTX_RTSPTRANSPORTS=tcp \
-  -e MTX_WEBRTCADDITIONALHOSTS=172.20.31.102 \
+  -e MTX_WEBRTCADDITIONALHOSTS=172.20.31.6 \
   -p 8554:8554 \
   -p 1935:1935 \
   -p 8888:8888 \
