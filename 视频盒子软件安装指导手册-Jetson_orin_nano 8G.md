@@ -35,7 +35,7 @@
 ```
 sudo pip3 install meson
 sudo pip3 install ninja
-mkdir project && cd project/
+mkdir software && cd software/
 
 git clone https://github.com/GNOME/glib.git
 cd glib

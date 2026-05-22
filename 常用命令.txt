@@ -3,7 +3,7 @@
 	pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 	pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 方式二：
-	pip install ultralytics==8.3.24 -i https://mirrors.aliyun.com/pypi/simple/
+	pip install ultralytics -i https://mirrors.aliyun.com/pypi/simple/
 方式三：
 	python -m pip install --upgrade pip
 	pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
@@ -383,17 +383,82 @@ sudo hwclock -w
 sudo hwclock -r
 
 
+33.系统时间同步：
+win10服务器：
+	1.使用win + R 组合键在运行窗口中输入regedit；
+	2.找到目录：\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\NtpServer，把Enabled设置为1 ；
+	3.计算机\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\Config，并把AnnounceFlags的值设置为5（系统默认为a）；
+	4.使用win + R 组合键在运行窗口中输入services.msc，打开服务；
+	5.在服务项中找到Windows Time ；
+	6.设置为自动后确定，点击右键重新启动此服务，至此服务启动成功；
+	7.启动和关闭windows NTP的方式：net stop w32time；net start w32time；
+	8.防火墙放行 NTP 端口：netsh advfirewall firewall add rule name="NTP Server" dir=in action=allow protocol=UDP localport=123
+	8.本机测试：在cmd窗口中输入w32tm /stripchart /computer:127.0.0.1 ，如果有回显则服务正常。
+jeston-ubuntu客户端：
+在线安装：
+	1.安装：sudo apt-get install chrony；
+	2.修改配置文件：vim /etc/chrony.conf；
+	 添加以下内容：
+		# /etc/chrony/chrony.conf
+
+		# 指定时间源（Win10工作站）
+		server 172.20.31.57 iburst minpoll 5 maxpoll 8
+		# minpoll 5 = 32秒最小间隔
+		# maxpoll 8 = 256秒最大间隔
+		# iburst = 初始快速同步几次
+
+		# 记录系统时钟的漂移率
+		driftfile /var/lib/chrony/drift
+
+		# 允许时间在启动时快速调整
+		makestep 1.0 3
+
+		# 如果无法连接NTP服务器，仍保持时间
+		local stratum 10
+
+		# 日志
+		log measurements statistics tracking
+	3.重启服务：
+		systemctl restart chronyd；
+离线安装：
+	1.创建目录：
+		mkdir ~/chrony-offline-pkg
+		cd ~/chrony-offline-pkg
+	2.下载 chrony 及所有依赖
+		sudo apt-get update
+		sudo apt-get download $(apt-cache depends --recurse --no-recommends --no-suggests --no-conflicts --no-breaks --no-replaces --no-enhances chrony | grep "^\w")
+	3.检查目录下是否生成了 .deb 文件，并确认架构是 arm64
+		dpkg-deb -I chrony_*.deb | grep Architecture
+	4.打包
+		tar -czvf chrony-offline-install.tar.gz chrony-offline-pkg
+	注意：上面步骤是下载离线包
+	5.卸载systemd-timesyncd：sudo dpkg -r --force-depends systemd-timesyncd；
+	6.查看：dpkg -l | grep systemd-timesyncd
+	7.解压
+		tar -xzvf chrony-offline-install.tar.gz
+	8.安装
+		sudo dpkg -i *.deb
+	9.验证	
+		chronyd --version
+配置文件：
+	1.修改配置文件：sudo vim /etc/chrony/chrony.conf
+	3.重启服务：
+		sudo systemctl daemon-reload
+		sudo systemctl enable chrony
+		sudo systemctl start chrony
+
+onnx转换成om：
+atc --model=suitcase.onnx     --framework=5     --output=suitcase_dynamic_with_aipp     --input_shape="images:-1,3,640,640"     --dynamic_batch_size="1,2,4,8,16,32,48,64"     --input_format=NCHW     --soc_version=Ascend310P3     --insert_op_conf=aipp_yuv_hardware.cfg     --precision_mode=allow_mix_precision
 
 
+# 添加 8554/tcp 端口到 public 区域（永久生效）
+firewall-cmd --zone=public --add-port=8554/tcp --permanent
 
+# 重载防火墙配置使其生效
+firewall-cmd --reload
 
-
-
-
-
-
-
-
+# 验证是否添加成功
+firewall-cmd --zone=public --list-ports
 
 
 

@@ -208,7 +208,14 @@ VLC的主要功能包括：
 	
 九、ZLMediaKit服务
 切换：/home/orin/ZLMediaKit/release/linux/Debug
-运行：./MediaServer 
+运行：./MediaServer
+rtsp流转发：
+curl -X POST "http://127.0.0.1:8080/index/api/addStreamProxy" \
+-d "secret=123456" \
+-d "vhost=__defaultVhost__" \
+-d "app=live" \
+-d "stream=stream1" \
+-d "url=rtsp://admin:supconit123@172.20.31.14:554/cam/realmonitor?channel=1&subtype=0" 
 
 十、C++模型转换
 命令：/usr/src/tensorrt/bin/trtexec --onnx=best.onnx --saveEngine=best.engine

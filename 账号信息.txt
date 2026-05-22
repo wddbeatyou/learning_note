@@ -1,11 +1,15 @@
 中电：
 账号：P6060751
 邮箱：dongdong.wang15@gientech.com
-密码：Wdd@930817
+密码：Wdd@930817,Zxh@941112
+
+gitee仓库
+账号：wdd930817
+密码：wdd@930817
 
 中控Gitlib代码库
 账号：1695100164@qq.com
-密码：wdd930817
+密码：wdd930817,Zxh@941112
 
 中控上网：
 账号：gdwb/20250043
